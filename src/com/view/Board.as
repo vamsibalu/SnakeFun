@@ -18,7 +18,8 @@ package com.view
 		private var mySnake:MySnake;
 		public var apple:Element; //Our apple
 		private var space_value:Number; //space between the snake parts
-		public var allSnakes_vector:Vector.<Snake>;
+		public var allSnakes_vector:Vector.<Snake> = new Vector.<Snake>;
+		public static var thisObj:Board;
 		
 		
 		public static const PLACEFOOD:String = "placefoodpls";
@@ -26,6 +27,7 @@ package com.view
 		
 		public function Board(_base:SnakeFun)
 		{
+			thisObj = this;
 			makeDummyUI()
 			space_value = 2;
 			init();
@@ -41,7 +43,8 @@ package com.view
 			addChild(mySnake);
 			
 			//add Remote snakes by listening Remote
-			Remote.getThisObj().addEventListener(Remote.NEW_SNAKE,addNewSnake)
+			Remote.getThisObj().addEventListener(Remote.NEW_SNAKE,addNewSnake);
+			Remote.getThisObj().addEventListener(Remote.DATA_CHANGE,updateTheSnake)
 		}
 		
 		private function placeFoodRequest(e:Event):void{
@@ -53,10 +56,17 @@ package com.view
 			var tempRemoteSnake:RemoteSnake = new RemoteSnake();
 			tempRemoteSnake.playerData = e.data;
 			addChild(tempRemoteSnake);
+			allSnakes_vector.push(tempRemoteSnake);
 		}
 		
-		private function updateAllSnakes():void{
-			
+		private function updateTheSnake(e:CustomEvent):void{
+			for(var i:int = 0; i<allSnakes_vector.length; i++){
+				if(allSnakes_vector[i].playerData.name == e.data.name){
+					trace("ddd modifying data for",e.data.name);
+					break;
+				}
+			}
+			trace("ddd updateTheSnake done or not..? data for",e.data.name,e.data.directon);
 		}
 		
 		private function placeApple(snake_vector:Vector.<Element>,caught:Boolean = true):void{
@@ -83,10 +93,10 @@ package com.view
 		
 		
 		// User interface objects
-		protected var incomingMessages:TextField;
-		protected var outgoingMessages:TextField;
-		protected var userlist:TextField;
-		protected var nameInput:TextField;
+		public var incomingMessages:TextField;
+		public var outgoingMessages:TextField;
+		public var userlist:TextField;
+		public var nameInput:TextField;
 		
 		private function makeDummyUI():void{
 			var tempSp:Sprite = new Sprite();

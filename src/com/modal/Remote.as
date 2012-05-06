@@ -5,6 +5,7 @@
 package com.modal
 {
 	import com.events.CustomEvent;
+	import com.view.Board;
 	
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
@@ -58,6 +59,7 @@ package com.modal
 		
 		// Method invoked when a chat messageText(message+score) is received
 		protected function chatMessageListener (fromClient:IClient,messageText:String):void {
+			trace("ddd messageText=",messageText)
 			var tempPlayer:PlayerDataVO = new PlayerDataVO();
 			tempPlayer.name = getUserName(fromClient);
 			var ary:Array = messageText.split(",");
@@ -69,6 +71,7 @@ package com.modal
 		// Method invoked when a client joins the room
 		protected function addClientListener (e:RoomEvent):void {
 			if (e.getClient().isSelf()) {
+				Board.thisObj.incomingMessages.appendText("You joined the chat.\n");
 				trace("You joined the chat.");
 			} else {
 				if (chatRoom.getSyncState() != SynchronizationState.SYNCHRONIZING) {
@@ -76,35 +79,43 @@ package com.modal
 					tempPlayer.name = getUserName(e.getClient());
 					tempPlayer.directon = "RR";
 					tempPlayer.score = "0";
-					
+					trace("ddd somebody joined the room dispatchEvent Remote.NEW_SNAKE",tempPlayer.name);
 					dispatchEvent(new CustomEvent(Remote.NEW_SNAKE,tempPlayer));
 					// Show a "guest joined" message only when the room isn't performing
 					// its initial occupant-list synchronization.
-					//incomingMessages.appendText(getUserName(e.getClient())+ " joined the chat.\n");
+					Board.thisObj.incomingMessages.appendText(getUserName(e.getClient())+ " joined the chat.\n");
 				}
 			}
-			//updateUserList();
+			updateUserList();
 		}
 		
 		// Method invoked when the current client joins the room
 		protected function joinRoomListener (e:RoomEvent):void {
-			//updateUserList();
+			updateUserList();
 		}
 		// Method invoked when a client leave the room
 		protected function removeClientListener (e:RoomEvent):void {
-			/*incomingMessages.appendText(getUserName(e.getClient())
+			Board.thisObj.incomingMessages.appendText(getUserName(e.getClient())
 				+ " left the chat.\n");
-			incomingMessages.scrollV = incomingMessages.maxScrollV;
-			updateUserList();*/
+			Board.thisObj.incomingMessages.scrollV = Board.thisObj.incomingMessages.maxScrollV;
+			updateUserList();
 		}
 		
+		// Helper method to display the room's
+		// clients in the user list
+		protected function updateUserList ():void {
+			Board.thisObj.userlist.text = "";
+			for each (var client:IClient in chatRoom.getOccupants()) {
+				Board.thisObj.userlist.appendText(getUserName(client) + "\n");
+			}
+		}
 		
 		// Helper method to retrieve a client's user name.
 		// If no user name is set for the specified client,
 		// returns "Guestn" (where 'n' is the client's id).  
 		protected function getUserName (client:IClient):String {
 			var username:String = client.getAttribute("username");
-			if (username == null) {
+			if (username == null){
 				return "Guest" + client.getClientID();
 			} else {
 				return username;
@@ -116,18 +127,18 @@ package com.modal
 		protected function updateClientAttributeListener (e:RoomEvent):void {
 			var changedAttr:Attribute = e.getChangedAttr();
 			trace("Attribute ",changedAttr.name)
-			/*if (changedAttr.name == "username") {
+			if (changedAttr.name == "username") {
 				if (changedAttr.oldValue == null) {
-					incomingMessages.appendText("Guest" + e.getClientID());
+					Board.thisObj.incomingMessages.appendText("Guest" + e.getClientID());
 				} else {
-					incomingMessages.appendText(changedAttr.oldValue);
+					Board.thisObj.incomingMessages.appendText(changedAttr.oldValue);
 				}
-				incomingMessages.appendText(" 's name changed to "
+				Board.thisObj.incomingMessages.appendText(" 's name changed to "
 					+ getUserName(e.getClient())
 					+ ".\n");
-				incomingMessages.scrollV = incomingMessages.maxScrollV;
+				Board.thisObj.incomingMessages.scrollV = Board.thisObj.incomingMessages.maxScrollV;
 				updateUserList();
-			}*/
+			}
 		}
 		
 		// Keyboard listener for nameInput
