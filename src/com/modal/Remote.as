@@ -9,6 +9,8 @@ package com.modal
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.events.IEventDispatcher;
+	import flash.events.KeyboardEvent;
+	import flash.ui.Keyboard;
 	
 	import net.user1.reactor.Attribute;
 	import net.user1.reactor.IClient;
@@ -70,6 +72,12 @@ package com.modal
 				trace("You joined the chat.");
 			} else {
 				if (chatRoom.getSyncState() != SynchronizationState.SYNCHRONIZING) {
+					var tempPlayer:PlayerDataVO = new PlayerDataVO();
+					tempPlayer.name = getUserName(e.getClient());
+					tempPlayer.directon = "RR";
+					tempPlayer.score = "0";
+					
+					dispatchEvent(new CustomEvent(Remote.NEW_SNAKE,tempPlayer));
 					// Show a "guest joined" message only when the room isn't performing
 					// its initial occupant-list synchronization.
 					//incomingMessages.appendText(getUserName(e.getClient())+ " joined the chat.\n");
@@ -120,6 +128,16 @@ package com.modal
 				incomingMessages.scrollV = incomingMessages.maxScrollV;
 				updateUserList();
 			}*/
+		}
+		
+		// Keyboard listener for nameInput
+		public function nameKeyUpListener (e:KeyboardEvent):void {
+			var self:IClient;
+			if (e.keyCode == Keyboard.ENTER) {
+				self = reactor.self();
+				self.setAttribute("username", e.target.text);
+				e.target.text = "";
+			}
 		}
 	}
 }

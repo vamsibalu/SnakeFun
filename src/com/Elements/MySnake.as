@@ -7,7 +7,7 @@ package com.Elements
 	public class MySnake extends Snake implements ISnake
 	{
 		public function MySnake(){
-			super();
+			super(false);
 			addEventListener(Event.ADDED_TO_STAGE,addedToStage);
 		}
 		

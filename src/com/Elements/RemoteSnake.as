@@ -9,35 +9,35 @@ package com.Elements
 	public class RemoteSnake extends Snake implements ISnake{
 		
 		public function RemoteSnake(){
-			super();
+			super(true);
 		}
 		
 		//hey bala use this function with RemoteData;
 		public function directionChanged(direction:String):void {
 			var m:Object = new Object(); //MARKER OBJECT
 			
-			if (direction = "LL")
+			if (direction == "LL")
 			{
 				snake_vector[0].direction = "L";
 				m = {x:snake_vector[0].x, y:snake_vector[0].y, type:"L"};
 				last_button_down = Keyboard.LEFT;
 				flag = false;
 			}
-			else if (direction = "RR")
+			else if (direction == "RR")
 			{
 				snake_vector[0].direction = "R";
 				m = {x:snake_vector[0].x, y:snake_vector[0].y, type:"R"};
 				last_button_down = Keyboard.RIGHT;
 				flag = false;
 			}
-			else if (direction = "UU")
+			else if (direction == "UU")
 			{
 				snake_vector[0].direction = "U";
 				m = {x:snake_vector[0].x, y:snake_vector[0].y, type:"U"};
 				last_button_down = Keyboard.UP;
 				flag = false;
 			}
-			else if (direction = "DD")
+			else if (direction == "DD")
 			{
 				snake_vector[0].direction = "D";
 				m = {x:snake_vector[0].x, y:snake_vector[0].y, type:"D"};

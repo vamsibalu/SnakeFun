@@ -2,11 +2,16 @@ package com.view
 {
 	import com.Elements.Element;
 	import com.Elements.MySnake;
+	import com.Elements.RemoteSnake;
 	import com.Elements.Snake;
+	import com.events.CustomEvent;
 	import com.modal.Remote;
+	import com.utils.UIObj;
 	
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.events.KeyboardEvent;
+	import flash.text.TextField;
 	
 	public class Board extends Sprite
 	{
@@ -21,6 +26,7 @@ package com.view
 		
 		public function Board(_base:SnakeFun)
 		{
+			makeDummyUI()
 			space_value = 2;
 			init();
 		}
@@ -42,8 +48,11 @@ package com.view
 			placeApple(Snake(e.target).snake_vector);
 		}
 		
-		private function addNewSnake(e:Event):void{
-			
+		private function addNewSnake(e:CustomEvent):void{
+			trace("ddd addNewSnake in Board player=",e.data.name)
+			var tempRemoteSnake:RemoteSnake = new RemoteSnake();
+			tempRemoteSnake.playerData = e.data;
+			addChild(tempRemoteSnake);
 		}
 		
 		private function updateAllSnakes():void{
@@ -71,5 +80,23 @@ package com.view
 			if (!apple.stage)
 				this.addChild(apple);
 		}
+		
+		
+		// User interface objects
+		protected var incomingMessages:TextField;
+		protected var outgoingMessages:TextField;
+		protected var userlist:TextField;
+		protected var nameInput:TextField;
+		
+		private function makeDummyUI():void{
+			var tempSp:Sprite = new Sprite();
+			incomingMessages = UIObj.creatTxt(tempSp,300,200);
+			outgoingMessages = UIObj.creatTxt(tempSp,399,20,10,210);
+			userlist = UIObj.creatTxt(tempSp,89,200,310);
+			nameInput = UIObj.creatTxt(tempSp,100,20,10,240);
+			nameInput.addEventListener(KeyboardEvent.KEY_UP,Remote.getThisObj().nameKeyUpListener);
+			addChild(tempSp);
+		}
+		
 	}
 }

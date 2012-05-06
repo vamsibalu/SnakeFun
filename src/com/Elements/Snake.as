@@ -4,6 +4,7 @@
  */
 package com.Elements  
 {
+	import com.modal.PlayerDataVO;
 	import com.view.Board;
 	
 	import flash.display.Sprite;
@@ -31,9 +32,12 @@ package com.Elements
 		private var score:Number;
 		private var score_tf:TextField; //the Textfield showing the score
 		private var board:Board;
+		private var remoteSnake:Boolean;
+		public var playerData:PlayerDataVO;
 		
-		public function Snake() 
+		public function Snake(_remoteSnake:Boolean) 
 		{
+			remoteSnake = _remoteSnake;
 			//if(stage)
 			this.addEventListener(Event.ADDED_TO_STAGE, init);
 		}
@@ -102,14 +106,18 @@ package com.Elements
 			this.addChild(who);
 		}
 		
+		//Moving Snake..
 		private function moveIt(e:TimerEvent):void{
 			if(board.apple){
 				if (snake_vector[0].x == board.apple.x && snake_vector[0].y == board.apple.y){
 					//placeApple();
-					dispatchEvent(new Event(Board.PLACEFOOD));
-					//show the current Score
-					score += board.apple.catchValue;
-					score_tf.text = "Score:" + String(score);
+					if(remoteSnake == false){
+						dispatchEvent(new Event(Board.PLACEFOOD));
+						
+						//show the current Score
+						score += board.apple.catchValue;
+						score_tf.text = "Score:" + String(score);
+					}
 					//Attach a new snake Element
 					snake_vector.push(new Element(0x00AAFF,1,10,10));
 					snake_vector[snake_vector.length-1].direction = snake_vector[snake_vector.length-2].direction; //lastOneRichtung
