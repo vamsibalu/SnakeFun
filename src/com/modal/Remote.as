@@ -25,7 +25,9 @@ package com.modal
 	{
 		public static var thisObj:Remote;
 		public static const NEW_SNAKE:String = "newsnake";
-		public static const DATA_CHANGE:String = "dataChange";
+		public static const GOTDATA_FROM_REMOTE:String = "dataChange";
+		public static const SNAKE_NAME_CHANGE:String = "snakenameChange";
+		public static const UPDATE_SNAKES_QUANTITY:String = "updatequantity";
 		
 		private var reactor:Reactor;
 		public var chatRoom:Room; //bala for board;
@@ -47,6 +49,7 @@ package com.modal
 		
 		// Method invoked when the connection is ready
 		protected function readyListener (e:ReactorEvent):void {
+			
 			chatRoom = reactor.getRoomManager().createRoom("bala");
 			
 			chatRoom.addMessageListener("CHAT_MESSAGE",chatMessageListener);
@@ -65,7 +68,8 @@ package com.modal
 			var ary:Array = messageText.split(",");
 			tempPlayer.directon = ary[0].toString();
 			tempPlayer.score = ary[1].toString();
-			dispatchEvent(new CustomEvent(Remote.DATA_CHANGE,tempPlayer));
+			tempPlayer.rawData = messageText;
+			dispatchEvent(new CustomEvent(Remote.GOTDATA_FROM_REMOTE,tempPlayer));
 		}
 		
 		// Method invoked when a client joins the room
@@ -79,7 +83,7 @@ package com.modal
 					tempPlayer.name = getUserName(e.getClient());
 					tempPlayer.directon = "RR";
 					tempPlayer.score = "0";
-					trace("ddd somebody joined the room dispatchEvent Remote.NEW_SNAKE",tempPlayer.name);
+					trace("ddd somebody joined the room dispatching Remote.NEW_SNAKE",tempPlayer);
 					dispatchEvent(new CustomEvent(Remote.NEW_SNAKE,tempPlayer));
 					// Show a "guest joined" message only when the room isn't performing
 					// its initial occupant-list synchronization.
@@ -103,10 +107,20 @@ package com.modal
 		
 		// Helper method to display the room's
 		// clients in the user list
+		private var userList:int = 1;
 		protected function updateUserList ():void {
+			var tempList:int = 0;
 			Board.thisObj.userlist.text = "";
 			for each (var client:IClient in chatRoom.getOccupants()) {
+				tempList++;
 				Board.thisObj.userlist.appendText(getUserName(client) + "\n");
+			}
+			
+			//for new snakes add or remove..
+			if(userList != tempList){
+				userList = tempList;
+				trace("ddd List Snakes Updating2...",userList)
+				dispatchEvent(new CustomEvent(Remote.UPDATE_SNAKES_QUANTITY,chatRoom.getOccupants()));
 			}
 		}
 		
@@ -133,9 +147,12 @@ package com.modal
 				} else {
 					Board.thisObj.incomingMessages.appendText(changedAttr.oldValue);
 				}
-				Board.thisObj.incomingMessages.appendText(" 's name changed to "
-					+ getUserName(e.getClient())
-					+ ".\n");
+				var objj:Object = new Object();
+				objj.oldN = changedAttr.oldValue;
+				objj.newN =  getUserName(e.getClient());
+				trace("ddd Remote dispatching name changed=",objj.newN);
+				dispatchEvent(new CustomEvent(Remote.SNAKE_NAME_CHANGE,objj));
+				Board.thisObj.incomingMessages.appendText(" 's name changed to "+ getUserName(e.getClient())+ ".\n");
 				Board.thisObj.incomingMessages.scrollV = Board.thisObj.incomingMessages.maxScrollV;
 				updateUserList();
 			}

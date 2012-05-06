@@ -18,7 +18,7 @@ package com.view
 		private var mySnake:MySnake;
 		public var apple:Element; //Our apple
 		private var space_value:Number; //space between the snake parts
-		public var allSnakes_vector:Vector.<Snake> = new Vector.<Snake>;
+		public var allSnakes_vector:Vector.<Snake> = new Vector.<Snake>();
 		public static var thisObj:Board;
 		
 		
@@ -45,13 +45,16 @@ package com.view
 			
 			//add Remote snakes by listening Remote
 			Remote.getThisObj().addEventListener(Remote.NEW_SNAKE,addNewSnake);
-			Remote.getThisObj().addEventListener(Remote.DATA_CHANGE,updateTheSnake);
+			Remote.getThisObj().addEventListener(Remote.GOTDATA_FROM_REMOTE,updateTheRemoteSnake);
+			Remote.getThisObj().addEventListener(Remote.SNAKE_NAME_CHANGE,updateSnakeName);
+			Remote.getThisObj().addEventListener(Remote.UPDATE_SNAKES_QUANTITY,updateSnakeQuantity);
 		}
 		
 		private function needToSendTo_Remote(e:CustomEvent):void{
-			var tempMsg:String = e.data.directon+","+
-			Remote.getThisObj().chatRoom.sendMessage("CHAT_MESSAGE",true,null,outgoingMessages.text);
-			outgoingMessages.text = "";
+			var tempMsg:String = e.data.directon+","+"10";
+			Remote.getThisObj().chatRoom.sendMessage("CHAT_MESSAGE",true,null,tempMsg);
+			outgoingMessages.text = tempMsg;
+			trace("ddd sending chat message=",tempMsg)
 		}
 		
 		private function placeFoodRequest(e:Event):void{
@@ -59,14 +62,33 @@ package com.view
 		}
 		
 		private function addNewSnake(e:CustomEvent):void{
-			trace("ddd addNewSnake in Board player=",e.data.name)
+			trace("ddd addNewSnake in Board  for player2=",e.data.name);
 			var tempRemoteSnake:RemoteSnake = new RemoteSnake();
 			tempRemoteSnake.playerData = e.data;
 			addChild(tempRemoteSnake);
 			allSnakes_vector.push(tempRemoteSnake);
 		}
 		
-		private function updateTheSnake(e:CustomEvent):void{
+		private function updateSnakeQuantity(e:CustomEvent):void{
+			var ary:Array = e.data2 as Array;
+			trace("ddd updated quantity ary=",ary,"allSnakes_vector",allSnakes_vector);
+		}
+		
+		private function updateSnakeName(e:CustomEvent):void{
+			trace("ddd updateSnakeName allSnakes.length= ",allSnakes_vector.length," oldN=",e.data2.oldN," newN",e.data2.newN)
+			for(var i:int = 0; i<allSnakes_vector.length; i++){
+				if(allSnakes_vector[i].playerData.name == e.data2.oldN){
+					trace("ddd modifying name for",e.data2.oldN,e.data2.newN);
+					allSnakes_vector[i].playerData.name = e.data2.newN;
+					break;
+				}
+			}
+		}
+		
+		private function updateTheRemoteSnake(e:CustomEvent):void{
+			incomingMessages.appendText(e.data.name + " says: " + e.data.rawData + "\n");
+			incomingMessages.scrollV = incomingMessages.maxScrollV;
+			
 			for(var i:int = 0; i<allSnakes_vector.length; i++){
 				if(allSnakes_vector[i].playerData.name == e.data.name){
 					trace("ddd modifying data for",e.data.name);

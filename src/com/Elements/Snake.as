@@ -117,6 +117,7 @@ package com.Elements
 						//show the current Score
 						score += board.apple.catchValue;
 						score_tf.text = "Score:" + String(score);
+						playerData.score = String(score);
 					}
 					//Attach a new snake Element
 					snake_vector.push(new Element(0x00AAFF,1,10,10));
