@@ -29,8 +29,6 @@ package com.Elements
 		{
 			//if(stage)
 			this.addEventListener(Event.ADDED_TO_STAGE, init);
-			//else
-				//init();
 		}
 		
 		private function init(e:Event = null):void
