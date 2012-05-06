@@ -5,9 +5,19 @@ package com.modal
 	
 	public class Remote extends EventDispatcher
 	{
-		public function Remote(target:IEventDispatcher=null)
+		public static var thisObj:Remote;
+		public static const NEW_SNAKE:String = "newsnake";
+		public function Remote()
 		{
-			super(target);
+			
+		}
+		
+		public static function getThisObj():Remote{
+			if(thisObj == null){
+				thisObj = new Remote();
+			}
+			
+			return thisObj;
 		}
 	}
 }

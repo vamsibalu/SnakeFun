@@ -1,13 +1,15 @@
 package com.Elements  
 {
+	import com.view.Board;
+	
 	import flash.display.Sprite;
-	import flash.text.TextField;
-	import flash.utils.Timer;
-	import flash.events.TimerEvent;
-	import flash.ui.Keyboard;
+	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
-	import flash.events.Event;
+	import flash.events.TimerEvent;
+	import flash.text.TextField;
+	import flash.ui.Keyboard;
+	import flash.utils.Timer;
 	
 		
 	public class Snake extends Sprite
@@ -18,12 +20,13 @@ package com.Elements
 		private var timer:Timer; 
 		private var dead:Boolean;
 		private var min_elements:int; //holds how many parts should the snake have at the beginning
-		private var apple:Element; //Our apple
+		//private var apple:Element; //Our apple
 		private var space_value:Number; //space between the snake parts
 		private var last_button_down:uint; //the keyCode of the last button pressed
 		private var flag:Boolean; //is it allowed to change direction?
 		private var score:Number;
 		private var score_tf:TextField; //the Textfield showing the score
+		private var board:Board;
 		
 		public function Snake() 
 		{
@@ -33,14 +36,15 @@ package com.Elements
 		
 		private function init(e:Event = null):void
 		{
+			board = Board(this.parent)
 			snake_vector = new Vector.<Element>;
 			markers_vector = new Vector.<Object>;
 			space_value = 2;
 			timer = new Timer(500); //Every 50th millisecond, the moveIt() function will be fired!
 			dead = false;
 			min_elements = 1;
-			apple = new Element(0xFF0000, 1,10, 10); //red, not transparent, width:10, height: 10;
-			apple.catchValue = 0; //pretty obvious
+			//apple = new Element(0xFF0000, 1,10, 10); //red, not transparent, width:10, height: 10;
+			//apple.catchValue = 0; //pretty obvious
 			last_button_down = Keyboard.RIGHT; //The starting direction of the snake (only change it if you change the 'for cycle' too.)
 			score = 0;
 			score_tf = new TextField();
@@ -63,7 +67,7 @@ package com.Elements
 				}
 			}
 			
-			placeApple(false);
+			//placeApple(false);  //for 1st time board will add
 			timer.addEventListener(TimerEvent.TIMER,moveIt);
 			stage.addEventListener(KeyboardEvent.KEY_DOWN,directionChanged);
 			timer.start();
@@ -94,36 +98,14 @@ package com.Elements
 			this.addChild(who);
 		}
 		
-		private function placeApple(caught:Boolean = true):void
-		{
-			if (caught)
-				apple.catchValue += 10;
-			
-			var boundsX:int = (Math.floor(stage.stageWidth / (snake_vector[0].width + space_value)))-1;
-			var randomX:Number = Math.floor(Math.random()*boundsX);
-			
-			var boundsY:int = (Math.floor(stage.stageHeight/(snake_vector[0].height + space_value)))-1;
-			var randomY:Number = Math.floor(Math.random()*boundsY);
-
-			apple.x = randomX * (apple.width + space_value);
-			apple.y = randomY * (apple.height + space_value);
-			
-			for(var i:uint=0;i<snake_vector.length-1;i++)
-			{
-				if(snake_vector[i].x == apple.x && snake_vector[i].y == apple.y)
-					placeApple(false);
-			}
-			if (!apple.stage)
-				this.addChild(apple);
-		}
-		
 		private function moveIt(e:TimerEvent):void
 		{
-			if (snake_vector[0].x == apple.x && snake_vector[0].y == apple.y)
+			if (snake_vector[0].x == board.apple.x && snake_vector[0].y == board.apple.y)
 			{
-				placeApple();
+				//placeApple();
+				dispatchEvent(new Event(Board.PLACEFOOD));
 				//show the current Score
-				score += apple.catchValue;
+				score += board.apple.catchValue;
 				score_tf.text = "Score:" + String(score);
 				//Attach a new snake Element
 				snake_vector.push(new Element(0x00AAFF,1,10,10));
