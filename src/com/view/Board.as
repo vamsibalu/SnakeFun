@@ -21,6 +21,7 @@ package com.view
 		
 		public function Board(_base:SnakeFun)
 		{
+			space_value = 2;
 			init();
 		}
 		
@@ -30,10 +31,15 @@ package com.view
 			
 			//add my snake;
 			mySnake = new MySnake();
+			mySnake.addEventListener(Board.PLACEFOOD,placeFoodRequest);
 			addChild(mySnake);
 			
 			//add Remote snakes by listening Remote
 			Remote.getThisObj().addEventListener(Remote.NEW_SNAKE,addNewSnake)
+		}
+		
+		private function placeFoodRequest(e:Event):void{
+			placeApple(Snake(e.target).snake_vector);
 		}
 		
 		private function addNewSnake(e:Event):void{
@@ -44,7 +50,7 @@ package com.view
 			
 		}
 		
-		public function placeApple(snake_vector:Vector.<Element>,caught:Boolean = true):void{
+		private function placeApple(snake_vector:Vector.<Element>,caught:Boolean = true):void{
 			if (caught)
 				apple.catchValue += 10;
 			

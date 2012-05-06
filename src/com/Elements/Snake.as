@@ -11,11 +11,11 @@ package com.Elements
 	import flash.ui.Keyboard;
 	import flash.utils.Timer;
 	
-		
+	
 	public class Snake extends Sprite
 	{
 		//DO NOT GIVE THEM A VALUE HERE! Give them a value in the init() function
-		private var snake_vector:Vector.<Element>; //the snake's parts are held in here
+		public var snake_vector:Vector.<Element>; //the snake's parts are held in here and visible to Board bala
 		private var markers_vector:Vector.<Object>; //the markers are held in here
 		private var timer:Timer; 
 		private var dead:Boolean;
@@ -49,7 +49,7 @@ package com.Elements
 			score = 0;
 			score_tf = new TextField();
 			this.addChild(score_tf);
-
+			
 			//Create the first <min_elements> Snake parts
 			for(var i:int=0;i<min_elements;++i)
 			{
@@ -98,25 +98,25 @@ package com.Elements
 			this.addChild(who);
 		}
 		
-		private function moveIt(e:TimerEvent):void
-		{
-			if (snake_vector[0].x == board.apple.x && snake_vector[0].y == board.apple.y)
-			{
-				//placeApple();
-				dispatchEvent(new Event(Board.PLACEFOOD));
-				//show the current Score
-				score += board.apple.catchValue;
-				score_tf.text = "Score:" + String(score);
-				//Attach a new snake Element
-				snake_vector.push(new Element(0x00AAFF,1,10,10));
-				snake_vector[snake_vector.length-1].direction = snake_vector[snake_vector.length-2].direction; //lastOneRichtung
-				attachElement(snake_vector[snake_vector.length-1],
-									  (snake_vector[snake_vector.length-2].x),
-									  snake_vector[snake_vector.length-2].y,
-									  snake_vector[snake_vector.length-2].direction);
+		private function moveIt(e:TimerEvent):void{
+			if(board.apple){
+				if (snake_vector[0].x == board.apple.x && snake_vector[0].y == board.apple.y){
+					//placeApple();
+					dispatchEvent(new Event(Board.PLACEFOOD));
+					//show the current Score
+					score += board.apple.catchValue;
+					score_tf.text = "Score:" + String(score);
+					//Attach a new snake Element
+					snake_vector.push(new Element(0x00AAFF,1,10,10));
+					snake_vector[snake_vector.length-1].direction = snake_vector[snake_vector.length-2].direction; //lastOneRichtung
+					attachElement(snake_vector[snake_vector.length-1],
+						(snake_vector[snake_vector.length-2].x),
+						snake_vector[snake_vector.length-2].y,
+						snake_vector[snake_vector.length-2].direction);
+				}
 			}
-			if (snake_vector[0].x > stage.stageWidth-snake_vector[0].width || snake_vector[0].x < 0 || snake_vector[0].y > stage.stageHeight-snake_vector[0].height || snake_vector[0].y < 0)
-			{
+			
+			if (snake_vector[0].x > stage.stageWidth-snake_vector[0].width || snake_vector[0].x < 0 || snake_vector[0].y > stage.stageHeight-snake_vector[0].height || snake_vector[0].y < 0){
 				GAME_OVER();
 			}
 			
@@ -140,7 +140,7 @@ package com.Elements
 				{
 					GAME_OVER();
 				}
-			
+				
 				//Move the boy
 				var DIRECTION:String = snake_vector[i].direction;
 				switch (DIRECTION)
@@ -160,7 +160,7 @@ package com.Elements
 				}
 				
 			}
-						
+			
 			flag = true;
 		}
 		
@@ -174,11 +174,11 @@ package com.Elements
 			stage.removeEventListener(KeyboardEvent.KEY_DOWN,directionChanged);
 			init();
 		}
-	
+		
 		private function directionChanged(e:KeyboardEvent):void 
 		{
 			var m:Object = new Object(); //MARKER OBJECT
-
+			
 			if (e.keyCode == Keyboard.LEFT && last_button_down != e.keyCode && last_button_down != Keyboard.RIGHT && flag)
 			{
 				snake_vector[0].direction = "L";
@@ -211,5 +211,5 @@ package com.Elements
 		}
 		
 	}
-
+	
 }
