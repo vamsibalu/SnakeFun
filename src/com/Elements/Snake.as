@@ -1,4 +1,4 @@
-package  
+package com.Elements  
 {
 	import flash.display.Sprite;
 	import flash.text.TextField;
@@ -9,9 +9,8 @@ package
 	import flash.events.MouseEvent;
 	import flash.events.Event;
 	
-	import com.Element;
 		
-	public class Main extends Sprite
+	public class Snake extends Sprite
 	{
 		//DO NOT GIVE THEM A VALUE HERE! Give them a value in the init() function
 		private var snake_vector:Vector.<Element>; //the snake's parts are held in here
@@ -26,15 +25,15 @@ package
 		private var score:Number;
 		private var score_tf:TextField; //the Textfield showing the score
 		
-		public function Main() 
+		public function Snake() 
 		{
 			//if(stage)
-				//addEventListener(Event.ADDED_TO_STAGE, init);
+			this.addEventListener(Event.ADDED_TO_STAGE, init);
 			//else
 				//init();
 		}
 		
-		public function init(e:Event = null):void
+		private function init(e:Event = null):void
 		{
 			snake_vector = new Vector.<Element>;
 			markers_vector = new Vector.<Object>;
