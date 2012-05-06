@@ -1,3 +1,7 @@
+/**
+ * @author Balakrishna [vamsibalu@gmail.com]
+ * @version 2.0
+ */
 package com.Elements  
 {
 	import com.view.Board;
@@ -16,14 +20,14 @@ package com.Elements
 	{
 		//DO NOT GIVE THEM A VALUE HERE! Give them a value in the init() function
 		public var snake_vector:Vector.<Element>; //the snake's parts are held in here and visible to Board bala
-		private var markers_vector:Vector.<Object>; //the markers are held in here
+		public var markers_vector:Vector.<Object>; //the markers are held in here bala
 		private var timer:Timer; 
 		private var dead:Boolean;
 		private var min_elements:int; //holds how many parts should the snake have at the beginning
 		//private var apple:Element; //Our apple
 		private var space_value:Number; //space between the snake parts
-		private var last_button_down:uint; //the keyCode of the last button pressed
-		private var flag:Boolean; //is it allowed to change direction?
+		public var last_button_down:uint; //the keyCode of the last button pressed to any snake (bala)
+		public var flag:Boolean; //is it allowed to change direction? bala
 		private var score:Number;
 		private var score_tf:TextField; //the Textfield showing the score
 		private var board:Board;
@@ -69,7 +73,7 @@ package com.Elements
 			
 			//placeApple(false);  //for 1st time board will add
 			timer.addEventListener(TimerEvent.TIMER,moveIt);
-			stage.addEventListener(KeyboardEvent.KEY_DOWN,directionChanged);
+			//stage.addEventListener(KeyboardEvent.KEY_DOWN,directionChanged);
 			timer.start();
 		}
 		
@@ -171,12 +175,11 @@ package com.Elements
 			while (this.numChildren)
 				this.removeChildAt(0);
 			timer.removeEventListener(TimerEvent.TIMER,moveIt);
-			stage.removeEventListener(KeyboardEvent.KEY_DOWN,directionChanged);
+			//stage.removeEventListener(KeyboardEvent.KEY_DOWN,directionChanged);
 			init();
 		}
 		
-		private function directionChanged(e:KeyboardEvent):void 
-		{
+		/*private function directionChanged(e:KeyboardEvent):void {
 			var m:Object = new Object(); //MARKER OBJECT
 			
 			if (e.keyCode == Keyboard.LEFT && last_button_down != e.keyCode && last_button_down != Keyboard.RIGHT && flag)
@@ -208,7 +211,7 @@ package com.Elements
 				flag = false;
 			}
 			markers_vector.push(m);
-		}
+		}*/
 		
 	}
 	

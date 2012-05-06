@@ -1,3 +1,7 @@
+/**
+ * @author Balakrishna [vamsibalu@gmail.com]
+ * @version 2.0
+ */
 package com.modal
 {
 	import com.events.CustomEvent;
