@@ -33,7 +33,7 @@ package com.Elements
 		private var score_tf:TextField; //the Textfield showing the score
 		private var board:Board;
 		private var remoteSnake:Boolean;
-		public var playerData:PlayerDataVO;
+		public var playerData:PlayerDataVO = new PlayerDataVO();
 		
 		public function Snake(_remoteSnake:Boolean) 
 		{

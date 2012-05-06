@@ -40,11 +40,18 @@ package com.view
 			//add my snake;
 			mySnake = new MySnake();
 			mySnake.addEventListener(Board.PLACEFOOD,placeFoodRequest);
+			mySnake.addEventListener(CustomEvent.MY_KEY_DATA_TO_SEND,needToSendTo_Remote);
 			addChild(mySnake);
 			
 			//add Remote snakes by listening Remote
 			Remote.getThisObj().addEventListener(Remote.NEW_SNAKE,addNewSnake);
-			Remote.getThisObj().addEventListener(Remote.DATA_CHANGE,updateTheSnake)
+			Remote.getThisObj().addEventListener(Remote.DATA_CHANGE,updateTheSnake);
+		}
+		
+		private function needToSendTo_Remote(e:CustomEvent):void{
+			var tempMsg:String = e.data.directon+","+
+			Remote.getThisObj().chatRoom.sendMessage("CHAT_MESSAGE",true,null,outgoingMessages.text);
+			outgoingMessages.text = "";
 		}
 		
 		private function placeFoodRequest(e:Event):void{

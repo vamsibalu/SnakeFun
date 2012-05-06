@@ -28,7 +28,7 @@ package com.modal
 		public static const DATA_CHANGE:String = "dataChange";
 		
 		private var reactor:Reactor;
-		protected var chatRoom:Room;
+		public var chatRoom:Room; //bala for board;
 		public function Remote()
 		{
 			reactor = new Reactor();
@@ -59,13 +59,13 @@ package com.modal
 		
 		// Method invoked when a chat messageText(message+score) is received
 		protected function chatMessageListener (fromClient:IClient,messageText:String):void {
-			trace("ddd messageText=",messageText)
+			trace("ddd Remote got messageText=",messageText)
 			var tempPlayer:PlayerDataVO = new PlayerDataVO();
 			tempPlayer.name = getUserName(fromClient);
 			var ary:Array = messageText.split(",");
 			tempPlayer.directon = ary[0].toString();
 			tempPlayer.score = ary[1].toString();
-			dispatchEvent(new CustomEvent(CustomEvent.REMOTEDATA_CHANGE,tempPlayer));
+			dispatchEvent(new CustomEvent(Remote.DATA_CHANGE,tempPlayer));
 		}
 		
 		// Method invoked when a client joins the room

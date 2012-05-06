@@ -1,5 +1,7 @@
 package com.Elements
 {
+	import com.events.CustomEvent;
+	
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.ui.Keyboard;
@@ -20,6 +22,7 @@ package com.Elements
 			
 			if (e.keyCode == Keyboard.LEFT && last_button_down != e.keyCode && last_button_down != Keyboard.RIGHT && flag)
 			{
+				playerData.directon = "LL";
 				snake_vector[0].direction = "L";
 				m = {x:snake_vector[0].x, y:snake_vector[0].y, type:"L"};
 				last_button_down = Keyboard.LEFT;
@@ -27,6 +30,7 @@ package com.Elements
 			}
 			else if (e.keyCode == Keyboard.RIGHT && last_button_down != e.keyCode && last_button_down != Keyboard.LEFT && flag)
 			{
+				playerData.directon = "RR";
 				snake_vector[0].direction = "R";
 				m = {x:snake_vector[0].x, y:snake_vector[0].y, type:"R"};
 				last_button_down = Keyboard.RIGHT;
@@ -34,6 +38,7 @@ package com.Elements
 			}
 			else if (e.keyCode == Keyboard.UP && last_button_down != e.keyCode && last_button_down != Keyboard.DOWN && flag)
 			{
+				playerData.directon = "UU";
 				snake_vector[0].direction = "U";
 				m = {x:snake_vector[0].x, y:snake_vector[0].y, type:"U"};
 				last_button_down = Keyboard.UP;
@@ -41,11 +46,13 @@ package com.Elements
 			}
 			else if (e.keyCode == Keyboard.DOWN && last_button_down != e.keyCode && last_button_down != Keyboard.UP && flag)
 			{
+				playerData.directon = "DD";
 				snake_vector[0].direction = "D";
 				m = {x:snake_vector[0].x, y:snake_vector[0].y, type:"D"};
 				last_button_down = Keyboard.DOWN;
 				flag = false;
 			}
+			dispatchEvent(new CustomEvent(CustomEvent.MY_KEY_DATA_TO_SEND,playerData));
 			markers_vector.push(m);
 		}
 	}
