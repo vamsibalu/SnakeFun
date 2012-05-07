@@ -48,7 +48,7 @@ package com.view
 			allSnakes_vector.push(mySnake);
 			//add Remote snakes by listening Remote
 			Remote.getThisObj().addEventListener(Remote.NEW_SNAKE,addNewSnake);
-			Remote.getThisObj().addEventListener(Remote.GOTDATA_FROM_REMOTE,updateTheRemoteSnake);
+			Remote.getThisObj().addEventListener(Remote.GOTDATA_FROM_REMOTE,updateTheRemoteSnakeDirection);
 			Remote.getThisObj().addEventListener(Remote.SNAKE_NAME_CHANGE,updateSnakeName);
 			Remote.getThisObj().addEventListener(Remote.UPDATE_SNAKES_QUANTITY,updateSnakeQuantity);
 		}
@@ -89,8 +89,8 @@ package com.view
 		}
 		
 		private function updateSnakeName(e:CustomEvent):void{
-			trace("ddd updateSnakeName allSnakes.length= ",allSnakes_vector.length," oldN=",e.data2.oldN," newN",e.data2.newN)
 			for(var i:int = 0; i<allSnakes_vector.length; i++){
+				trace("ddd updateSnakeName allSnakes.length= ",allSnakes_vector.length," playerDataoldN=",allSnakes_vector[i].playerData.name,"oldN=",e.data2.oldN," newN",e.data2.newN)
 				if(allSnakes_vector[i].playerData.name == e.data2.oldN){
 					trace("ddd modifying name for",e.data2.oldN,e.data2.newN);
 					allSnakes_vector[i].playerData.name = e.data2.newN;
@@ -99,18 +99,18 @@ package com.view
 			}
 		}
 		
-		private function updateTheRemoteSnake(e:CustomEvent):void{
+		private function updateTheRemoteSnakeDirection(e:CustomEvent):void{
 			incomingMessages.appendText(e.data.name + " says: " + e.data.rawData + "\n");
 			incomingMessages.scrollV = incomingMessages.maxScrollV;
 			
 			for(var i:int = 0; i<allSnakes_vector.length; i++){
-				if(allSnakes_vector[i].playerData.name == e.data.name){
-					trace("ddd modifying data for",e.data.name);
+				if((allSnakes_vector[i].playerData.name == e.data.name) && (allSnakes_vector[i] is RemoteSnake)){
+					trace("ddd modifying remoteSnake for",e.data.name);
+					RemoteSnake(allSnakes_vector[i]).directionChanged(e.data.directon);
 					break;
 				}
-				trace("ddd allSnakes_vector[i].playerData.name",allSnakes_vector[i].playerData.name," allSnakes_vector.length=",allSnakes_vector.length)
+				trace("ddd allSnakes_vector[i].playerData.name",allSnakes_vector[i].playerData.name," e.data.name=",e.data.name," allSnakes_vector.length=",allSnakes_vector.length)
 			}
-			trace("ddd updateTheSnake done or not..? data for",e.data.name,e.data.directon,"allSnakes_vector.length=",allSnakes_vector.length);
 		}
 		
 		private function placeApple(snake_vector:Vector.<Element>,caught:Boolean = true):void{

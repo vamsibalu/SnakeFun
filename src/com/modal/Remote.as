@@ -25,7 +25,7 @@ package com.modal
 	{
 		public static var thisObj:Remote;
 		public static const NEW_SNAKE:String = "newsnake";
-		public static const GOTDATA_FROM_REMOTE:String = "dataChange";
+		public static const GOTDATA_FROM_REMOTE:String = "gotdataRemoteChange";
 		public static const SNAKE_NAME_CHANGE:String = "snakenameChange";
 		public static const UPDATE_SNAKES_QUANTITY:String = "updatequantity";
 		
@@ -140,17 +140,17 @@ package com.modal
 		// changes the value of a shared attribute
 		protected function updateClientAttributeListener (e:RoomEvent):void {
 			var changedAttr:Attribute = e.getChangedAttr();
-			trace("Attribute ",changedAttr.name)
+			var objj:Object = new Object();
 			if (changedAttr.name == "username") {
 				if (changedAttr.oldValue == null) {
 					Board.thisObj.incomingMessages.appendText("Guest" + e.getClientID());
+					objj.oldN = "Guest" + e.getClientID();
 				} else {
 					Board.thisObj.incomingMessages.appendText(changedAttr.oldValue);
+					objj.oldN = changedAttr.oldValue;
 				}
-				var objj:Object = new Object();
-				objj.oldN = changedAttr.oldValue;
 				objj.newN =  getUserName(e.getClient());
-				trace("ddd Remote dispatching name changed=",objj.newN);
+				trace("ddd Remote dispatching name changed=",objj.oldN," TO ",objj.newN);
 				dispatchEvent(new CustomEvent(Remote.SNAKE_NAME_CHANGE,objj));
 				Board.thisObj.incomingMessages.appendText(" 's name changed to "+ getUserName(e.getClient())+ ".\n");
 				Board.thisObj.incomingMessages.scrollV = Board.thisObj.incomingMessages.maxScrollV;
