@@ -38,19 +38,23 @@ package com.view
 		
 		private function init():void{
 			apple = new Element(0xFF0000, 1,10, 10); //red, not transparent, width:10, height: 10;
-			apple.catchValue = 0; //pretty obvious
+			apple.catchValue = 0;
 			
+			//add Remote Listeners..
+			Remote.getThisObj().addEventListener(Remote.IJOINED_ADDMYSNAKE,iJoined_AddMySnake);
+			Remote.getThisObj().addEventListener(Remote.SNAKE_NAME_CHANGE,updateSnakeName);
+			Remote.getThisObj().addEventListener(Remote.UPDATE_SNAKES_QUANTITY,updateSnakeQuantity);
+			Remote.getThisObj().addEventListener(Remote.GOTDATA_FROM_REMOTE,updateTheRemoteSnakeDirection);
+		}
+		
+		private function iJoined_AddMySnake(e:CustomEvent):void{
 			//add my snake;
 			mySnake = new MySnake();
 			mySnake.addEventListener(Board.PLACEFOOD,placeFoodRequest);
 			mySnake.addEventListener(CustomEvent.MY_KEY_DATA_TO_SEND,needToSendTo_Remote);
 			addChild(mySnake);
 			allSnakes_vector.push(mySnake);
-			//add Remote snakes by listening Remote
-			Remote.getThisObj().addEventListener(Remote.NEW_SNAKE,addNewSnake);
-			Remote.getThisObj().addEventListener(Remote.GOTDATA_FROM_REMOTE,updateTheRemoteSnakeDirection);
-			Remote.getThisObj().addEventListener(Remote.SNAKE_NAME_CHANGE,updateSnakeName);
-			Remote.getThisObj().addEventListener(Remote.UPDATE_SNAKES_QUANTITY,updateSnakeQuantity);
+			trace("ddd iJoined_AddMySnake");
 		}
 		
 		private function needToSendTo_Remote(e:CustomEvent):void{
@@ -65,25 +69,36 @@ package com.view
 		}
 		
 		private function addNewSnake(e:CustomEvent):void{
-			trace("ddd addNewSnake in Board  for player2=",e.data.name);
 			var tempRemoteSnake:RemoteSnake = new RemoteSnake();
 			tempRemoteSnake.playerData = e.data;
 			addChild(tempRemoteSnake);
 			allSnakes_vector.push(tempRemoteSnake);
+			trace("ddd addNewSnake in Board  for player=",e.data.name," allSnakes.length=",allSnakes_vector.length);
 		}
 		
 		private function updateSnakeQuantity(e:CustomEvent):void{
 			var ary:Array = e.data2 as Array;
 			for each (var client:IClient in ary) {
 				var namee:String = Remote.getThisObj().getUserName(client);
-				for(var i:int = 0; i<allSnakes_vector.length; i++){
-					if(allSnakes_vector[i].playerData.name!=namee){
-						var tempPlayer:PlayerDataVO = new PlayerDataVO();
+				var tempPlayer:PlayerDataVO;
+				if(allSnakes_vector.length > 0){
+					var alreadyExists:Boolean = false;
+					for(var i:int = 0; i<allSnakes_vector.length; i++){
+						if(allSnakes_vector[i].playerData.name == namee){
+							alreadyExists = true;
+							break;
+						}
+					}
+					if(alreadyExists == false){
+						tempPlayer = new PlayerDataVO();
 						tempPlayer.name = namee;
 						addNewSnake(new CustomEvent("",tempPlayer));
-						trace("ddd added new Snake updated quantity",namee);
-						break;
 					}
+				}else{
+					tempPlayer = new PlayerDataVO();
+					tempPlayer.name = namee;
+					trace("ddd addNewSnake in Board:: first snake.....")
+					addNewSnake(new CustomEvent("",tempPlayer));
 				}
 			}
 		}

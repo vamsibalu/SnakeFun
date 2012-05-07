@@ -24,7 +24,7 @@ package com.modal
 	public class Remote extends EventDispatcher
 	{
 		public static var thisObj:Remote;
-		public static const NEW_SNAKE:String = "newsnake";
+		public static const IJOINED_ADDMYSNAKE:String = "ijoinedaddsnake";
 		public static const GOTDATA_FROM_REMOTE:String = "gotdataRemoteChange";
 		public static const SNAKE_NAME_CHANGE:String = "snakenameChange";
 		public static const UPDATE_SNAKES_QUANTITY:String = "updatequantity";
@@ -74,17 +74,18 @@ package com.modal
 		
 		// Method invoked when a client joins the room
 		protected function addClientListener (e:RoomEvent):void {
+			trace("ddd addClientListener_______________");
 			if (e.getClient().isSelf()) {
 				Board.thisObj.incomingMessages.appendText("You joined the chat.\n");
-				trace("You joined the chat.");
+				trace("ddd You joined the chat.");
+				var tempPlayer:PlayerDataVO = new PlayerDataVO();
+				tempPlayer.name = getUserName(e.getClient());
+				tempPlayer.directon = "RR";
+				tempPlayer.score = "0";
+				dispatchEvent(new CustomEvent(Remote.IJOINED_ADDMYSNAKE,tempPlayer));
 			} else {
 				if (chatRoom.getSyncState() != SynchronizationState.SYNCHRONIZING) {
-					var tempPlayer:PlayerDataVO = new PlayerDataVO();
-					tempPlayer.name = getUserName(e.getClient());
-					tempPlayer.directon = "RR";
-					tempPlayer.score = "0";
-					trace("ddd somebody joined the room dispatching Remote.NEW_SNAKE",tempPlayer);
-					dispatchEvent(new CustomEvent(Remote.NEW_SNAKE,tempPlayer));
+					trace("ddd somebody joined the room",getUserName(e.getClient()));
 					// Show a "guest joined" message only when the room isn't performing
 					// its initial occupant-list synchronization.
 					Board.thisObj.incomingMessages.appendText(getUserName(e.getClient())+ " joined the chat.\n");
@@ -95,10 +96,12 @@ package com.modal
 		
 		// Method invoked when the current client joins the room
 		protected function joinRoomListener (e:RoomEvent):void {
+			trace("ddd joinRoomListener_____________________");
 			updateUserList();
 		}
 		// Method invoked when a client leave the room
 		protected function removeClientListener (e:RoomEvent):void {
+			trace("ddd removeClientListener_____________________");
 			Board.thisObj.incomingMessages.appendText(getUserName(e.getClient())
 				+ " left the chat.\n");
 			Board.thisObj.incomingMessages.scrollV = Board.thisObj.incomingMessages.maxScrollV;
