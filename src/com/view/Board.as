@@ -5,6 +5,7 @@ package com.view
 	import com.Elements.RemoteSnake;
 	import com.Elements.Snake;
 	import com.events.CustomEvent;
+	import com.modal.PlayerDataVO;
 	import com.modal.Remote;
 	import com.utils.UIObj;
 	
@@ -12,6 +13,8 @@ package com.view
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.text.TextField;
+	
+	import net.user1.reactor.IClient;
 	
 	public class Board extends Sprite
 	{
@@ -42,7 +45,7 @@ package com.view
 			mySnake.addEventListener(Board.PLACEFOOD,placeFoodRequest);
 			mySnake.addEventListener(CustomEvent.MY_KEY_DATA_TO_SEND,needToSendTo_Remote);
 			addChild(mySnake);
-			
+			allSnakes_vector.push(mySnake);
 			//add Remote snakes by listening Remote
 			Remote.getThisObj().addEventListener(Remote.NEW_SNAKE,addNewSnake);
 			Remote.getThisObj().addEventListener(Remote.GOTDATA_FROM_REMOTE,updateTheRemoteSnake);
@@ -71,7 +74,18 @@ package com.view
 		
 		private function updateSnakeQuantity(e:CustomEvent):void{
 			var ary:Array = e.data2 as Array;
-			trace("ddd updated quantity ary=",ary,"allSnakes_vector",allSnakes_vector);
+			for each (var client:IClient in ary) {
+				var namee:String = Remote.getThisObj().getUserName(client);
+				for(var i:int = 0; i<allSnakes_vector.length; i++){
+					if(allSnakes_vector[i].playerData.name!=namee){
+						var tempPlayer:PlayerDataVO = new PlayerDataVO();
+						tempPlayer.name = namee;
+						addNewSnake(new CustomEvent("",tempPlayer));
+						trace("ddd added new Snake updated quantity",namee);
+						break;
+					}
+				}
+			}
 		}
 		
 		private function updateSnakeName(e:CustomEvent):void{
@@ -94,8 +108,9 @@ package com.view
 					trace("ddd modifying data for",e.data.name);
 					break;
 				}
+				trace("ddd allSnakes_vector[i].playerData.name",allSnakes_vector[i].playerData.name," allSnakes_vector.length=",allSnakes_vector.length)
 			}
-			trace("ddd updateTheSnake done or not..? data for",e.data.name,e.data.directon);
+			trace("ddd updateTheSnake done or not..? data for",e.data.name,e.data.directon,"allSnakes_vector.length=",allSnakes_vector.length);
 		}
 		
 		private function placeApple(snake_vector:Vector.<Element>,caught:Boolean = true):void{

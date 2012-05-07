@@ -127,7 +127,7 @@ package com.modal
 		// Helper method to retrieve a client's user name.
 		// If no user name is set for the specified client,
 		// returns "Guestn" (where 'n' is the client's id).  
-		protected function getUserName (client:IClient):String {
+		public function getUserName (client:IClient):String {
 			var username:String = client.getAttribute("username");
 			if (username == null){
 				return "Guest" + client.getClientID();
