@@ -10,7 +10,7 @@
 		
 		public static function parseValues(str:String):Dictionary {
 			var _pairs:Array = str.split(";");
-			var _pairDict = new Dictionary(true);
+			var _pairDict:Dictionary = new Dictionary(true);
 			var pairName:String;
 			var pairValue:String;
 			

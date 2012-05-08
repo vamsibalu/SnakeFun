@@ -5,6 +5,7 @@
 package com.modal
 {
 	import com.events.CustomEvent;
+	import com.utils.StringParser;
 	import com.view.Board;
 	
 	import flash.events.Event;
@@ -15,6 +16,7 @@ package com.modal
 	
 	import net.user1.reactor.Attribute;
 	import net.user1.reactor.IClient;
+	import net.user1.reactor.Messages;
 	import net.user1.reactor.Reactor;
 	import net.user1.reactor.ReactorEvent;
 	import net.user1.reactor.Room;
@@ -31,6 +33,7 @@ package com.modal
 		
 		private var reactor:Reactor;
 		public var chatRoom:Room; //bala for board;
+		private var strP:StringParser;
 		public function Remote()
 		{
 			reactor = new Reactor();
@@ -51,7 +54,6 @@ package com.modal
 		protected function readyListener (e:ReactorEvent):void {
 			
 			chatRoom = reactor.getRoomManager().createRoom("bala");
-			
 			chatRoom.addMessageListener("CHAT_MESSAGE",chatMessageListener);
 			chatRoom.addEventListener(RoomEvent.JOIN,joinRoomListener);
 			chatRoom.addEventListener(RoomEvent.ADD_OCCUPANT,addClientListener);

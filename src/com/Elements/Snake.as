@@ -62,6 +62,7 @@ package com.Elements
 			for(var i:int=0;i<min_elements;++i)
 			{
 				snake_vector[i] = new Element(0x00AAFF,1,10,10);
+				snake_vector[i].rotationZ = Math.random()*45;
 				snake_vector[i].direction = "R"; //The starting direction of the snake
 				if (i == 0)
 				{

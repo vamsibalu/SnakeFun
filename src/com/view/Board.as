@@ -50,6 +50,7 @@ package com.view
 		private function iJoined_AddMySnake(e:CustomEvent):void{
 			//add my snake;
 			mySnake = new MySnake();
+			mySnake.playerData = e.data;
 			mySnake.addEventListener(Board.PLACEFOOD,placeFoodRequest);
 			mySnake.addEventListener(CustomEvent.MY_KEY_DATA_TO_SEND,needToSendTo_Remote);
 			addChild(mySnake);
@@ -68,12 +69,12 @@ package com.view
 			placeApple(Snake(e.target).snake_vector);
 		}
 		
-		private function addNewSnake(e:CustomEvent):void{
+		private function addNewSnake(playerData:PlayerDataVO):void{
 			var tempRemoteSnake:RemoteSnake = new RemoteSnake();
-			tempRemoteSnake.playerData = e.data;
+			tempRemoteSnake.playerData = playerData;
 			addChild(tempRemoteSnake);
 			allSnakes_vector.push(tempRemoteSnake);
-			trace("ddd addNewSnake in Board  for player=",e.data.name," allSnakes.length=",allSnakes_vector.length);
+			trace("ddd addNewSnake in Board  for player=",playerData.name," allSnakes.length=",allSnakes_vector.length);
 		}
 		
 		private function updateSnakeQuantity(e:CustomEvent):void{
@@ -92,13 +93,8 @@ package com.view
 					if(alreadyExists == false){
 						tempPlayer = new PlayerDataVO();
 						tempPlayer.name = namee;
-						addNewSnake(new CustomEvent("",tempPlayer));
+						addNewSnake(tempPlayer);
 					}
-				}else{
-					tempPlayer = new PlayerDataVO();
-					tempPlayer.name = namee;
-					trace("ddd addNewSnake in Board:: first snake.....")
-					addNewSnake(new CustomEvent("",tempPlayer));
 				}
 			}
 		}
