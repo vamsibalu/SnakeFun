@@ -4,6 +4,7 @@
  */
 package com.modal
 {
+	import com.controller.MessageController;
 	import com.events.CustomEvent;
 	import com.utils.StringParser;
 	import com.view.Board;
@@ -15,12 +16,15 @@ package com.modal
 	import flash.ui.Keyboard;
 	
 	import net.user1.reactor.Attribute;
+	import net.user1.reactor.Client;
 	import net.user1.reactor.IClient;
+	import net.user1.reactor.MessageManager;
 	import net.user1.reactor.Messages;
 	import net.user1.reactor.Reactor;
 	import net.user1.reactor.ReactorEvent;
 	import net.user1.reactor.Room;
 	import net.user1.reactor.RoomEvent;
+	import net.user1.reactor.RoomManager;
 	import net.user1.reactor.SynchronizationState;
 	
 	public class Remote extends EventDispatcher
@@ -31,10 +35,14 @@ package com.modal
 		public static const SNAKE_NAME_CHANGE:String = "snakenameChange";
 		public static const UPDATE_SNAKES_QUANTITY:String = "updatequantity";
 		public static const SUMBODY_BEFORE_YOU:String = "someBodybeforeyou";
+		public static var MANAGER:RoomManager;
+		public static var MESSAGE_MANAGER:MessageManager;
 		
 		private var reactor:Reactor;
-		public var chatRoom:Room; //bala for board;
+		public  var chatRoom:Room; //bala for board;
 		private var strP:StringParser;
+		public var foodData:FoodDataVo = new FoodDataVo();
+		
 		public function Remote()
 		{
 			reactor = new Reactor();
@@ -53,14 +61,15 @@ package com.modal
 		
 		// Method invoked when the connection is ready
 		protected function readyListener (e:ReactorEvent):void {
-			
-			chatRoom = reactor.getRoomManager().createRoom("bala");
+			MANAGER = reactor.getRoomManager();
+			chatRoom = MANAGER.createRoom("bala");
 			chatRoom.addMessageListener("CHAT_MESSAGE",chatMessageListener);
 			chatRoom.addEventListener(RoomEvent.JOIN,joinRoomListener);
 			chatRoom.addEventListener(RoomEvent.ADD_OCCUPANT,addClientListener);
 			chatRoom.addEventListener(RoomEvent.REMOVE_OCCUPANT,removeClientListener);
 			chatRoom.addEventListener(RoomEvent.UPDATE_CLIENT_ATTRIBUTE,updateClientAttributeListener);
 			chatRoom.join();
+			chatRoom.setAttribute("foodData","xx=100");
 		}
 		
 		// Method invoked when a chat messageText(message+score) is received
@@ -122,6 +131,7 @@ package com.modal
 			for each (var client:IClient in chatRoom.getOccupants()) {
 				tempList++;
 				Board.thisObj.userlist.appendText(getUserName(client) + "\n");
+				trace("ddd client=",client)
 			}
 			trace("ddd check before me...",tempList)
 			//for new snakes add or remove..
@@ -133,8 +143,13 @@ package com.modal
 			
 			//check before your snake..
 			if(checkBeforeYou == true){
-				var data:Object
-				dispatchEvent(new CustomEvent(Remote.SUMBODY_BEFORE_YOU,data));
+				var data:Object;
+				if(tempList>1){
+					for each (var client2:IClient in chatRoom.getOccupants()) {
+						trace("xx ddd",client2.getAttribute("xx"));
+					}
+					dispatchEvent(new CustomEvent(Remote.SUMBODY_BEFORE_YOU,data));
+				}
 			}
 		}
 		
@@ -155,6 +170,7 @@ package com.modal
 		protected function updateClientAttributeListener (e:RoomEvent):void {
 			var changedAttr:Attribute = e.getChangedAttr();
 			var objj:Object = new Object();
+			trace("dd1 atribute changed",changedAttr.name);
 			if (changedAttr.name == "username") {
 				if (changedAttr.oldValue == null) {
 					Board.thisObj.incomingMessages.appendText("Guest" + e.getClientID());
@@ -180,6 +196,10 @@ package com.modal
 				self.setAttribute("username", e.target.text);
 				e.target.text = "";
 			}
+		}
+		
+		public function tellToAllAboutFood(e:Event):void{
+			chatRoom.sendMessage(MessageController.ADDFOOD_AT,true,null,foodData);
 		}
 	}
 }

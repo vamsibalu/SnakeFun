@@ -11,8 +11,13 @@ package
 	public class SnakeFun extends Sprite
 	{
 		private var view:View;
+		public static var WIDTH:Number;
+		public static var HEIGHT:Number;
+		
 		public function SnakeFun()
 		{
+			WIDTH = stage.stageWidth;
+			HEIGHT = stage.stageHeight;
 			view = new View(this);
 			addChild(view);
 		}

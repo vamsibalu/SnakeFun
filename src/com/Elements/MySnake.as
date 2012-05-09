@@ -9,7 +9,6 @@ package com.Elements
 	
 	public class MySnake extends Snake implements ISnake
 	{
-		public var foodData:FoodDataVo = new FoodDataVo();
 		public function MySnake(){
 			super(false);
 			addEventListener(Event.ADDED_TO_STAGE,addedToStage);

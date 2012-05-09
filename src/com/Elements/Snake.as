@@ -4,6 +4,7 @@
  */
 package com.Elements  
 {
+	import com.controller.MoveController;
 	import com.modal.PlayerDataVO;
 	import com.view.Board;
 	
@@ -109,14 +110,13 @@ package com.Elements
 		
 		//Moving Snake..
 		private function moveIt(e:TimerEvent):void{
-			if(board.apple){
-				if (snake_vector[0].x == board.apple.x && snake_vector[0].y == board.apple.y){
+			if(MoveController.apple){
+				if (snake_vector[0].x == MoveController.apple.x && snake_vector[0].y == MoveController.apple.y){
 					//placeApple();
 					if(remoteSnake == false){
-						dispatchEvent(new Event(Board.PLACEFOOD));
-						
+						dispatchEvent(new Event(Board.I_GOT_FOOD));
 						//show the current Score
-						score += board.apple.catchValue;
+						score += MoveController.apple.catchValue;
 						score_tf.text = "Score:" + String(score);
 						playerData.score = String(score);
 					}

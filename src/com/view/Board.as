@@ -4,6 +4,7 @@ package com.view
 	import com.Elements.MySnake;
 	import com.Elements.RemoteSnake;
 	import com.Elements.Snake;
+	import com.controller.MoveController;
 	import com.events.CustomEvent;
 	import com.modal.PlayerDataVO;
 	import com.modal.Remote;
@@ -19,20 +20,19 @@ package com.view
 	public class Board extends Sprite
 	{
 		private var mySnake:MySnake;
-		public var apple:Element; //Our apple
-		private var space_value:Number; //space between the snake parts
+		
 		public var allSnakes_vector:Vector.<Snake> = new Vector.<Snake>();
 		public static var thisObj:Board;
+		public var moveControll:MoveController;
 		
 		
-		public static const PLACEFOOD:String = "placefoodpls";
+		public static const I_GOT_FOOD:String = "igotfood";
 		
 		
 		public function Board(_base:SnakeFun)
 		{
 			thisObj = this;
 			makeDummyUI()
-			space_value = 2;
 			init();
 		}
 		
@@ -48,7 +48,8 @@ package com.view
 			//add my snake;
 			mySnake = new MySnake();
 			mySnake.playerData = e.data;
-			mySnake.addEventListener(Board.PLACEFOOD,placeFoodRequest);
+			mySnake.addEventListener(Board.I_GOT_FOOD,Remote.getThisObj().tellToAllAboutFood);
+			Remote.getThisObj().chatRoom.addMessageListener("addFoodAt",placeFood_ByRemote);
 			mySnake.addEventListener(CustomEvent.MY_KEY_DATA_TO_SEND,needToSendTo_Remote);
 			addChild(mySnake);
 			allSnakes_vector.push(mySnake);
@@ -62,8 +63,8 @@ package com.view
 			trace("ddd sending chat message=",tempMsg)
 		}
 		
-		private function placeFoodRequest(e:Event):void{
-			placeApple(mySnake.snake_vector);
+		protected function placeFood_ByRemote (fromClient:IClient,messageText:String):void {
+			//placeApple(mySnake.snake_vector);
 		}
 		
 		
@@ -120,35 +121,6 @@ package com.view
 				}
 				trace("ddd allSnakes_vector[i].playerData.name",allSnakes_vector[i].playerData.name," e.data.name=",e.data.name," allSnakes_vector.length=",allSnakes_vector.length)
 			}
-		}
-		
-		private function placeApple(snake_vector:Vector.<Element>,caught:Boolean = true):void{
-			if(apple == null){
-				apple = new Element(0xFF0000,1,10, 10);
-			}
-			apple.catchValue = 0;
-			
-			if (caught)
-				apple.catchValue += 10;
-			
-			var boundsX:int = (Math.floor(stage.stageWidth / (snake_vector[0].width + space_value)))-1;
-			var randomX:Number = Math.floor(Math.random()*boundsX);
-			
-			var boundsY:int = (Math.floor(stage.stageHeight/(snake_vector[0].height + space_value)))-1;
-			var randomY:Number = Math.floor(Math.random()*boundsY);
-			
-			apple.x = randomX * (apple.width + space_value);
-			apple.y = randomY * (apple.height + space_value);
-			
-			for(var i:uint=0;i<snake_vector.length-1;i++)
-			{
-				if(snake_vector[i].x == apple.x && snake_vector[i].y == apple.y)
-					placeApple(snake_vector,false);
-			}
-			if (!apple.stage)
-				this.addChild(apple);
-			mySnake.foodData.xx = String(apple.x);
-			mySnake.foodData.yy = String(apple.y);
 		}
 		
 		
