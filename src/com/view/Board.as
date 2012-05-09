@@ -37,16 +37,13 @@ package com.view
 		}
 		
 		private function init():void{
-			apple = new Element(0xFF0000, 1,10, 10); //red, not transparent, width:10, height: 10;
-			apple.catchValue = 0;
-			
 			//add Remote Listeners..
 			Remote.getThisObj().addEventListener(Remote.IJOINED_ADDMYSNAKE,iJoined_AddMySnake);
 			Remote.getThisObj().addEventListener(Remote.SNAKE_NAME_CHANGE,updateSnakeName);
 			Remote.getThisObj().addEventListener(Remote.UPDATE_SNAKES_QUANTITY,updateSnakeQuantity);
 			Remote.getThisObj().addEventListener(Remote.GOTDATA_FROM_REMOTE,updateTheRemoteSnakeDirection);
 		}
-		
+		//SSS xx=200;yy=200;col=0xff00ff;
 		private function iJoined_AddMySnake(e:CustomEvent):void{
 			//add my snake;
 			mySnake = new MySnake();
@@ -66,8 +63,9 @@ package com.view
 		}
 		
 		private function placeFoodRequest(e:Event):void{
-			placeApple(Snake(e.target).snake_vector);
+			placeApple(mySnake.snake_vector);
 		}
+		
 		
 		private function addNewSnake(playerData:PlayerDataVO):void{
 			var tempRemoteSnake:RemoteSnake = new RemoteSnake();
@@ -125,6 +123,11 @@ package com.view
 		}
 		
 		private function placeApple(snake_vector:Vector.<Element>,caught:Boolean = true):void{
+			if(apple == null){
+				apple = new Element(0xFF0000,1,10, 10);
+			}
+			apple.catchValue = 0;
+			
 			if (caught)
 				apple.catchValue += 10;
 			
@@ -144,6 +147,8 @@ package com.view
 			}
 			if (!apple.stage)
 				this.addChild(apple);
+			mySnake.foodData.xx = String(apple.x);
+			mySnake.foodData.yy = String(apple.y);
 		}
 		
 		

@@ -30,6 +30,7 @@ package com.modal
 		public static const GOTDATA_FROM_REMOTE:String = "gotdataRemoteChange";
 		public static const SNAKE_NAME_CHANGE:String = "snakenameChange";
 		public static const UPDATE_SNAKES_QUANTITY:String = "updatequantity";
+		public static const SUMBODY_BEFORE_YOU:String = "someBodybeforeyou";
 		
 		private var reactor:Reactor;
 		public var chatRoom:Room; //bala for board;
@@ -93,7 +94,9 @@ package com.modal
 					Board.thisObj.incomingMessages.appendText(getUserName(e.getClient())+ " joined the chat.\n");
 				}
 			}
-			updateUserList();
+			
+			//check the snake before you..
+			updateUserList(true);
 		}
 		
 		// Method invoked when the current client joins the room
@@ -113,19 +116,25 @@ package com.modal
 		// Helper method to display the room's
 		// clients in the user list
 		private var userList:int = 1;
-		protected function updateUserList ():void {
+		protected function updateUserList (checkBeforeYou:Boolean = false):void {
 			var tempList:int = 0;
 			Board.thisObj.userlist.text = "";
 			for each (var client:IClient in chatRoom.getOccupants()) {
 				tempList++;
 				Board.thisObj.userlist.appendText(getUserName(client) + "\n");
 			}
-			
+			trace("ddd check before me...",tempList)
 			//for new snakes add or remove..
 			if(userList != tempList){
 				userList = tempList;
 				trace("ddd List Snakes Updating2...",userList)
 				dispatchEvent(new CustomEvent(Remote.UPDATE_SNAKES_QUANTITY,chatRoom.getOccupants()));
+			}
+			
+			//check before your snake..
+			if(checkBeforeYou == true){
+				var data:Object
+				dispatchEvent(new CustomEvent(Remote.SUMBODY_BEFORE_YOU,data));
 			}
 		}
 		

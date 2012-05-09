@@ -1,6 +1,7 @@
 package com.Elements
 {
 	import com.events.CustomEvent;
+	import com.modal.FoodDataVo;
 	
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
@@ -8,6 +9,7 @@ package com.Elements
 	
 	public class MySnake extends Snake implements ISnake
 	{
+		public var foodData:FoodDataVo = new FoodDataVo();
 		public function MySnake(){
 			super(false);
 			addEventListener(Event.ADDED_TO_STAGE,addedToStage);

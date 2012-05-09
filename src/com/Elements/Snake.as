@@ -62,7 +62,7 @@ package com.Elements
 			for(var i:int=0;i<min_elements;++i)
 			{
 				snake_vector[i] = new Element(0x00AAFF,1,10,10);
-				snake_vector[i].rotationZ = Math.random()*45;
+				//snake_vector[i].rotationZ = Math.random()*45;
 				snake_vector[i].direction = "R"; //The starting direction of the snake
 				if (i == 0)
 				{
@@ -128,6 +128,8 @@ package com.Elements
 						snake_vector[snake_vector.length-2].y,
 						snake_vector[snake_vector.length-2].direction);
 				}
+			}else{
+				trace("apple not yet placed..")
 			}
 			
 			if (snake_vector[0].x > stage.stageWidth-snake_vector[0].width || snake_vector[0].x < 0 || snake_vector[0].y > stage.stageHeight-snake_vector[0].height || snake_vector[0].y < 0){
