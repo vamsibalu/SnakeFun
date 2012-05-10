@@ -4,6 +4,7 @@ package com.view
 	import com.Elements.MySnake;
 	import com.Elements.RemoteSnake;
 	import com.Elements.Snake;
+	import com.controller.MsgController;
 	import com.controller.MoveController;
 	import com.events.CustomEvent;
 	import com.modal.PlayerDataVO;
@@ -19,14 +20,10 @@ package com.view
 	
 	public class Board extends Sprite
 	{
-		private var mySnake:MySnake;
+		public var mySnake:MySnake;
 		
 		public var allSnakes_vector:Vector.<Snake> = new Vector.<Snake>();
 		public static var thisObj:Board;
-		public var moveControll:MoveController;
-		
-		
-		public static const I_GOT_FOOD:String = "igotfood";
 		
 		
 		public function Board(_base:SnakeFun)
@@ -38,18 +35,18 @@ package com.view
 		
 		private function init():void{
 			//add Remote Listeners..
-			Remote.getThisObj().addEventListener(Remote.IJOINED_ADDMYSNAKE,iJoined_AddMySnake);
-			Remote.getThisObj().addEventListener(Remote.SNAKE_NAME_CHANGE,updateSnakeName);
-			Remote.getThisObj().addEventListener(Remote.UPDATE_SNAKES_QUANTITY,updateSnakeQuantity);
-			Remote.getThisObj().addEventListener(Remote.GOTDATA_FROM_REMOTE,updateTheRemoteSnakeDirection);
+			Remote.getInstance().addEventListener(Remote.IJOINED_ADDMYSNAKE,iJoined_AddMySnake);
+			Remote.getInstance().addEventListener(Remote.SNAKE_NAME_CHANGE,updateSnakeName);
+			Remote.getInstance().addEventListener(Remote.UPDATE_SNAKES_QUANTITY,updateSnakeQuantity);
+			Remote.getInstance().addEventListener(Remote.GOTDATA_FROM_REMOTE,updateTheRemoteSnakeDirection);
 		}
 		//SSS xx=200;yy=200;col=0xff00ff;
 		private function iJoined_AddMySnake(e:CustomEvent):void{
 			//add my snake;
 			mySnake = new MySnake();
 			mySnake.playerData = e.data;
-			mySnake.addEventListener(Board.I_GOT_FOOD,Remote.getThisObj().tellToAllAboutFood);
-			Remote.getThisObj().chatRoom.addMessageListener("addFoodAt",placeFood_ByRemote);
+			mySnake.addEventListener(MySnake.I_GOT_FOOD,MoveController.getInstance().tellToController);
+			Remote.getInstance().chatRoom.addMessageListener(MsgController.ADDFOOD_AT,placeFood_ByRemote);
 			mySnake.addEventListener(CustomEvent.MY_KEY_DATA_TO_SEND,needToSendTo_Remote);
 			addChild(mySnake);
 			allSnakes_vector.push(mySnake);
@@ -58,7 +55,7 @@ package com.view
 		
 		private function needToSendTo_Remote(e:CustomEvent):void{
 			var tempMsg:String = e.data.directon+","+"10";
-			Remote.getThisObj().chatRoom.sendMessage("CHAT_MESSAGE",true,null,tempMsg);
+			Remote.getInstance().chatRoom.sendMessage("CHAT_MESSAGE",true,null,tempMsg);
 			outgoingMessages.text = tempMsg;
 			trace("ddd sending chat message=",tempMsg)
 		}
@@ -79,7 +76,7 @@ package com.view
 		private function updateSnakeQuantity(e:CustomEvent):void{
 			var ary:Array = e.data2 as Array;
 			for each (var client:IClient in ary) {
-				var namee:String = Remote.getThisObj().getUserName(client);
+				var namee:String = Remote.getInstance().getUserName(client);
 				var tempPlayer:PlayerDataVO;
 				if(allSnakes_vector.length > 0){
 					var alreadyExists:Boolean = false;
@@ -136,7 +133,7 @@ package com.view
 			outgoingMessages = UIObj.creatTxt(tempSp,399,20,10,210);
 			userlist = UIObj.creatTxt(tempSp,89,200,310);
 			nameInput = UIObj.creatTxt(tempSp,100,20,10,240);
-			nameInput.addEventListener(KeyboardEvent.KEY_UP,Remote.getThisObj().nameKeyUpListener);
+			nameInput.addEventListener(KeyboardEvent.KEY_UP,Remote.getInstance().nameKeyUpListener);
 			addChild(tempSp);
 		}
 		

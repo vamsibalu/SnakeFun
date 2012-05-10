@@ -4,6 +4,7 @@
  */
 package
 {
+	import com.controller.MoveController;
 	import com.view.View;
 	
 	import flash.display.Sprite;
@@ -13,6 +14,7 @@ package
 		private var view:View;
 		public static var WIDTH:Number;
 		public static var HEIGHT:Number;
+		public var moveControll:MoveController;
 		
 		public function SnakeFun()
 		{
@@ -20,6 +22,7 @@ package
 			HEIGHT = stage.stageHeight;
 			view = new View(this);
 			addChild(view);
+			moveControll = new MoveController(view);
 		}
 	}
 }

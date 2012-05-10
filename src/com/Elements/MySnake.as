@@ -7,8 +7,10 @@ package com.Elements
 	import flash.events.KeyboardEvent;
 	import flash.ui.Keyboard;
 	
-	public class MySnake extends Snake implements ISnake
-	{
+	public class MySnake extends Snake implements ISnake{
+		
+		public static const I_GOT_FOOD:String = "igotfood";
+		
 		public function MySnake(){
 			super(false);
 			addEventListener(Event.ADDED_TO_STAGE,addedToStage);

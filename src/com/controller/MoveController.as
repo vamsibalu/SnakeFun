@@ -1,18 +1,39 @@
 package com.controller
 {
 	import com.Elements.Element;
+	import com.Elements.MySnake;
+	import com.modal.Remote;
+	import com.view.View;
 	
+	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.events.IEventDispatcher;
 	
 	public class MoveController extends EventDispatcher{
+		private static var thisObj:MoveController;
 		public static var apple:Element; //Our apple
 		private var space_value:Number; //space between the snake parts
-		public function MoveController(){
+		private var view:View;
+		public static var classCount:int = 0;
+		public function MoveController(_view:View){
+			thisObj = this;
 			space_value = 2;
-			
+			view = _view;
+			//listen for gotfood event that snake will dispatch upon (hit && remoteSnake == false);
+			classCount++;
+			if (classCount>1) {
+				throw new Error("Error:Only Instance Allow Bala..Use MoveController.getInstance() instead of new.");
+			}
 		}
 		
+		public static function getInstance():MoveController{
+			return thisObj;
+		}
+		
+		public function tellToController(e:Event):void{
+			trace("dd1 told to controller placeApple")
+			placeApple(view.board.mySnake.snake_vector,true);
+		}
 		
 		private function placeApple(snake_vector:Vector.<Element>,caught:Boolean = true):void{
 			if(apple == null){
@@ -39,6 +60,12 @@ package com.controller
 			}
 			
 			//now place apple anywhere
+			Remote.getInstance().foodData.fCount++;
+			Remote.getInstance().foodData.fname = "fd"+Remote.getInstance().foodData.fCount;
+			Remote.getInstance().foodData.xx = String(apple.x);
+			Remote.getInstance().foodData.yy = String(apple.y);
+			//new food data updated..
+			Remote.getInstance().tellToAllAboutFood();
 		}
 	}
 }

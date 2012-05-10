@@ -114,7 +114,8 @@ package com.Elements
 				if (snake_vector[0].x == MoveController.apple.x && snake_vector[0].y == MoveController.apple.y){
 					//placeApple();
 					if(remoteSnake == false){
-						dispatchEvent(new Event(Board.I_GOT_FOOD));
+						trace("dd1 dispatching..I_GOT_FOOD");
+						dispatchEvent(new Event(MySnake.I_GOT_FOOD));
 						//show the current Score
 						score += MoveController.apple.catchValue;
 						score_tf.text = "Score:" + String(score);

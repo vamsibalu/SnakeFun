@@ -4,7 +4,7 @@
  */
 package com.modal
 {
-	import com.controller.MessageController;
+	import com.controller.MsgController;
 	import com.events.CustomEvent;
 	import com.utils.StringParser;
 	import com.view.Board;
@@ -29,7 +29,7 @@ package com.modal
 	
 	public class Remote extends EventDispatcher
 	{
-		public static var thisObj:Remote;
+		private static var thisObj:Remote;
 		public static const IJOINED_ADDMYSNAKE:String = "ijoinedaddsnake";
 		public static const GOTDATA_FROM_REMOTE:String = "gotdataRemoteChange";
 		public static const SNAKE_NAME_CHANGE:String = "snakenameChange";
@@ -43,17 +43,21 @@ package com.modal
 		private var strP:StringParser;
 		public var foodData:FoodDataVo = new FoodDataVo();
 		
-		public function Remote()
+		public function Remote(p_key:SingletonBlocker)
 		{
+			if (p_key == null) {
+				throw new Error("Error:Use MoveController.getInstance() instead of new.");
+			}
+			
 			reactor = new Reactor();
 			reactor.addEventListener(ReactorEvent.READY,readyListener);
 			// Connect to the server
 			reactor.connect("tryunion.com", 80);
 		}
 		
-		public static function getThisObj():Remote{
+		public static function getInstance():Remote{
 			if(thisObj == null){
-				thisObj = new Remote();
+				thisObj = new Remote(new SingletonBlocker());
 			}
 			
 			return thisObj;
@@ -170,7 +174,7 @@ package com.modal
 		protected function updateClientAttributeListener (e:RoomEvent):void {
 			var changedAttr:Attribute = e.getChangedAttr();
 			var objj:Object = new Object();
-			trace("dd1 atribute changed",changedAttr.name);
+			//trace("dd1 atribute changed",changedAttr);
 			if (changedAttr.name == "username") {
 				if (changedAttr.oldValue == null) {
 					Board.thisObj.incomingMessages.appendText("Guest" + e.getClientID());
@@ -198,8 +202,12 @@ package com.modal
 			}
 		}
 		
-		public function tellToAllAboutFood(e:Event):void{
-			chatRoom.sendMessage(MessageController.ADDFOOD_AT,true,null,foodData);
+		public function tellToAllAboutFood():void{
+			chatRoom.sendMessage(MsgController.ADDFOOD_AT,true,null,foodData.getString());
 		}
 	}
 }
+
+
+//blocker
+internal class SingletonBlocker {}
