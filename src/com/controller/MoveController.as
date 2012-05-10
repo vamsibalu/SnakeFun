@@ -4,12 +4,16 @@ package com.controller
 	import com.Elements.MySnake;
 	import com.Elements.RemoteSnake;
 	import com.events.CustomEvent;
+	import com.modal.PlayerDataVO;
 	import com.modal.Remote;
+	import com.view.Board;
 	import com.view.View;
 	
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.events.IEventDispatcher;
+	
+	import net.user1.reactor.IClient;
 	
 	public class MoveController extends EventDispatcher{
 		private static var thisObj:MoveController;
@@ -26,6 +30,16 @@ package com.controller
 			if (classCount>1) {
 				throw new Error("Error:Only Instance Allow Bala..Use MoveController.getInstance() instead of new.");
 			}
+			Remote.getInstance().addEventListener(Remote.SUMBODY_BEFORE_YOU,checkForBoforeYou);
+		}
+		
+		private function checkForBoforeYou(e:CustomEvent):void{
+			trace("dd1 checkForBoforeYou=",e.data2);
+			if(e.data2 == true){
+				for each (var client2:IClient in Remote.getInstance().chatRoom.getOccupants()) {
+					trace("xx ddd",client2.getAttribute("xx"));
+				}
+			}
 		}
 		
 		public static function getInstance():MoveController{
@@ -37,15 +51,32 @@ package com.controller
 			placeApple(view.board.mySnake.snake_vector,true);
 		}
 		
-		public function tellToController_Snake(e:CustomEvent):void{
+		public function tellToController_Snake(data:PlayerDataVO):void{
 			for(var i:int = 0; i<view.board.allSnakes_vector.length; i++){
-				if((view.board.allSnakes_vector[i].playerData.name == e.data.name) && (view.board.allSnakes_vector[i] is RemoteSnake)){
-					trace("ddd modifying remoteSnake for",e.data.name);
-					RemoteSnake(view.board.allSnakes_vector[i]).directionChanged(e.data.directon);
+				if((view.board.allSnakes_vector[i].playerData.name == data.name) && (view.board.allSnakes_vector[i] is RemoteSnake)){
+					trace("ddd modifying remoteSnake for",data.name);
 					break;
 				}
-				trace("ddd allSnakes_vector[i].playerData.name",view.board.allSnakes_vector[i].playerData.name," e.data.name=",e.data.name," allSnakes_vector.length=",view.board.allSnakes_vector.length)
+				trace("ddd allSnakes_vector[i].playerData.name",view.board.allSnakes_vector[i].playerData.name," e.data.name=",data.name," allSnakes_vector.length=",view.board.allSnakes_vector.length)
 			}
+		}
+		
+		public function tellToController_GotDirections(senderName:String,msg:String):void{
+			for(var i:int = 0; i<view.board.allSnakes_vector.length; i++){
+				if((view.board.allSnakes_vector[i].playerData.name == senderName) && (view.board.allSnakes_vector[i] is RemoteSnake)){
+					trace("ddd modifying remoteSnake Directions for",senderName);
+					RemoteSnake(view.board.allSnakes_vector[i]).directionChanged(msg);
+					break;
+				}
+				//trace("ddd allSnakes_vector[i].playerData.name",view.board.allSnakes_vector[i].playerData.name," senderName=",senderName," allSnakes_vector.length=",view.board.allSnakes_vector.length)
+			}
+		}
+		
+		public function tellToController_ToSendDirections(e:CustomEvent):void{
+			var tempMsg:String = e.data.directon;
+			Remote.getInstance().chatRoom.sendMessage(MsgController.ABOUT_DIRECTION,true,null,tempMsg);
+			Board.TXT.b.text = tempMsg;
+			trace("ddd sending chat message=",tempMsg)
 		}
 		
 		private function placeApple(snake_vector:Vector.<Element>,caught:Boolean = true):void{

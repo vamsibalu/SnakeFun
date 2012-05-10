@@ -4,6 +4,7 @@
  */
 package com.modal
 {
+	import com.controller.MoveController;
 	import com.controller.MsgController;
 	import com.events.CustomEvent;
 	import com.utils.StringParser;
@@ -31,7 +32,6 @@ package com.modal
 	{
 		private static var thisObj:Remote;
 		public static const IJOINED_ADDMYSNAKE:String = "ijoinedaddsnake";
-		public static const GOTSNAKE_DATA_FROM_REMOTE:String = "gotsnakedataRemoteChange";
 		public static const SNAKE_NAME_CHANGE:String = "snakenameChange";
 		public static const UPDATE_SNAKES_QUANTITY:String = "updatequantity";
 		public static const SUMBODY_BEFORE_YOU:String = "someBodybeforeyou";
@@ -69,21 +69,24 @@ package com.modal
 			chatRoom = MANAGER.createRoom("bala");
 			chatRoom.addMessageListener(MsgController.ABOUT_SNAKEDATA,gotMessageForSnake);
 			chatRoom.addMessageListener(MsgController.CHAT_MESSAGE,gotMessageForChat);
+			chatRoom.addMessageListener(MsgController.ABOUT_DIRECTION,gotMessageForDirections);
 			chatRoom.addEventListener(RoomEvent.JOIN,joinRoomListener);
 			chatRoom.addEventListener(RoomEvent.ADD_OCCUPANT,addClientListener);
 			chatRoom.addEventListener(RoomEvent.REMOVE_OCCUPANT,removeClientListener);
 			chatRoom.addEventListener(RoomEvent.UPDATE_CLIENT_ATTRIBUTE,updateClientAttributeListener);
 			chatRoom.join();
 		}
-		
+		protected function gotMessageForDirections(fromClient:IClient,messageText:String):void {
+			MoveController.getInstance().tellToController_GotDirections(getUserName(fromClient),messageText);
+		}
 		// Method invoked when a chat messageText(message+score) is received
-		protected function gotMessageForSnake (fromClient:IClient,messageText:String):void {
+		protected function gotMessageForSnake(fromClient:IClient,messageText:String):void {
 			trace("dd1 Remote got messageText1=",messageText)
 			var tempPlayer:PlayerDataVO = new PlayerDataVO();
 			tempPlayer.setStr(messageText);
 			tempPlayer.name = getUserName(fromClient);
 			trace("dd1 Remote got messageText2=",tempPlayer.getStr());
-			dispatchEvent(new CustomEvent(Remote.GOTSNAKE_DATA_FROM_REMOTE,tempPlayer));
+			MoveController.getInstance().tellToController_Snake(tempPlayer);
 		}
 		
 		// Method invoked when a client joins the room
@@ -99,10 +102,11 @@ package com.modal
 				dispatchEvent(new CustomEvent(Remote.IJOINED_ADDMYSNAKE,tempPlayer));
 			} else {
 				if (chatRoom.getSyncState() != SynchronizationState.SYNCHRONIZING) {
-					trace("ddd somebody joined the room",getUserName(e.getClient()));
+					trace("dd1 somebody joined the room",getUserName(e.getClient())," sentMessage=",Board.thisObj.currentSnakeStatus().getStr());
 					// Show a "guest joined" message only when the room isn't performing
 					// its initial occupant-list synchronization.
 					Board.thisObj.incomingMessages.appendText(getUserName(e.getClient())+ " joined the chat.\n");
+					e.getClient().sendMessage(MsgController.ABOUT_SNAKEDATA,Board.thisObj.currentSnakeStatus().getStr());
 				}
 			}
 			
@@ -133,9 +137,8 @@ package com.modal
 			for each (var client:IClient in chatRoom.getOccupants()) {
 				tempList++;
 				Board.thisObj.userlist.appendText(getUserName(client) + "\n");
-				trace("ddd client=",client)
+				//trace("ddd client=",client)
 			}
-			trace("ddd check before me...",tempList)
 			//for new snakes add or remove..
 			if(userList != tempList){
 				userList = tempList;
@@ -143,14 +146,13 @@ package com.modal
 				dispatchEvent(new CustomEvent(Remote.UPDATE_SNAKES_QUANTITY,chatRoom.getOccupants()));
 			}
 			
-			//check before your snake..
+			//check snakes before you..
 			if(checkBeforeYou == true){
-				var data:Object;
+				trace("dd1 check before me...",tempList)
 				if(tempList>1){
-					for each (var client2:IClient in chatRoom.getOccupants()) {
-						trace("xx ddd",client2.getAttribute("xx"));
-					}
-					dispatchEvent(new CustomEvent(Remote.SUMBODY_BEFORE_YOU,data));
+					dispatchEvent(new CustomEvent(Remote.SUMBODY_BEFORE_YOU,true));
+				}else{
+					dispatchEvent(new CustomEvent(Remote.SUMBODY_BEFORE_YOU,false))
 				}
 			}
 		}

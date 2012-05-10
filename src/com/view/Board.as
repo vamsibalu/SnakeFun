@@ -43,23 +43,22 @@ package com.view
 		
 		//SSS xx=200;yy=200;col=0xff00ff;
 		private function iJoined_AddMySnake(e:CustomEvent):void{
-			Remote.getInstance().addEventListener(Remote.GOTSNAKE_DATA_FROM_REMOTE,MoveController.getInstance().tellToController_Snake);
 			//add my snake;
 			mySnake = new MySnake();
 			mySnake.playerData = e.data;
 			mySnake.addEventListener(MySnake.I_GOT_FOOD,MoveController.getInstance().tellToController_Food);
 			Remote.getInstance().chatRoom.addMessageListener(MsgController.ADDFOOD_AT,placeFood_ByRemote);
-			mySnake.addEventListener(CustomEvent.MY_KEY_DATA_TO_SEND,needToSendTo_Remote);
+			mySnake.addEventListener(CustomEvent.MY_KEY_DATA_TO_SEND,MoveController.getInstance().tellToController_ToSendDirections);
 			addChild(mySnake);
 			allSnakes_vector.push(mySnake);
-			trace("ddd iJoined_AddMySnake");
+			trace("dd1 iJoined_AddMySnake");
 		}
 		
-		private function needToSendTo_Remote(e:CustomEvent):void{
-			var tempMsg:String = e.data.directon+","+"10";
-			Remote.getInstance().chatRoom.sendMessage("CHAT_MESSAGE",true,null,tempMsg);
-			outgoingMessages.text = tempMsg;
-			trace("ddd sending chat message=",tempMsg)
+		public function currentSnakeStatus():PlayerDataVO{
+			mySnake.playerData.xx = mySnake.x;
+			mySnake.playerData.yy = mySnake.y;
+			trace("dd1 currentStatus xx=",mySnake.x,mySnake.x);
+			return mySnake.playerData;
 		}
 		
 		protected function placeFood_ByRemote (fromClient:IClient,messageText:String):void {
@@ -82,6 +81,7 @@ package com.view
 		
 		private function updateSnakeQuantity(e:CustomEvent):void{
 			var ary:Array = e.data2 as Array;
+			trace("dd1 updateSnakeQuantity",ary)
 			for each (var client:IClient in ary) {
 				var namee:String = Remote.getInstance().getUserName(client);
 				var tempPlayer:PlayerDataVO;
@@ -118,11 +118,13 @@ package com.view
 		public var outgoingMessages:TextField;
 		public var userlist:TextField;
 		public var nameInput:TextField;
-		
+		public static var TXT:Object = new Object();
 		private function makeDummyUI():void{
 			var tempSp:Sprite = new Sprite();
 			incomingMessages = UIObj.creatTxt(tempSp,300,200);
 			outgoingMessages = UIObj.creatTxt(tempSp,399,20,10,210);
+			TXT.a = incomingMessages;
+			TXT.b = outgoingMessages;
 			// Keyboard listener for outgoingMessages
 			outgoingMessages.addEventListener(KeyboardEvent.KEY_UP, keyUpListener);
 			userlist = UIObj.creatTxt(tempSp,89,200,310);

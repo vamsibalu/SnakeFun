@@ -5,7 +5,9 @@ package com.controller
 	public class MsgController extends EventDispatcher{
 		public static const ADDFOOD_AT:String = "adfat";
 		public static const ABOUT_SNAKEDATA:String = "absnkt";
+		public static const ABOUT_DIRECTION:String = "abdrct";
 		public static const CHAT_MESSAGE:String = "chtmsg";
+		//public static const CHAT_MESSAGE:String = "chtmsg";
 		
 		public function MsgController(){
 		}
