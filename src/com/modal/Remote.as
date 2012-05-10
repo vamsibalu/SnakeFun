@@ -74,7 +74,6 @@ package com.modal
 			chatRoom.addEventListener(RoomEvent.REMOVE_OCCUPANT,removeClientListener);
 			chatRoom.addEventListener(RoomEvent.UPDATE_CLIENT_ATTRIBUTE,updateClientAttributeListener);
 			chatRoom.join();
-			chatRoom.setAttribute("foodData","xx=100");
 		}
 		
 		// Method invoked when a chat messageText(message+score) is received

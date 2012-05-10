@@ -1,8 +1,6 @@
 package com.Elements
 {
 	import com.events.CustomEvent;
-	import com.modal.FoodDataVo;
-	
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.ui.Keyboard;

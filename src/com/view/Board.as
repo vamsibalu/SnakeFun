@@ -64,6 +64,11 @@ package com.view
 		
 		protected function placeFood_ByRemote (fromClient:IClient,messageText:String):void {
 			//placeApple(mySnake.snake_vector);
+			trace("dd1 placeFood_ByRemote messageText",messageText)
+			Remote.getInstance().foodData.setString(messageText);
+			addChild(MoveController.apple);
+			MoveController.apple.x = Remote.getInstance().foodData.xx;
+			MoveController.apple.y = Remote.getInstance().foodData.yy;
 		}
 		
 		

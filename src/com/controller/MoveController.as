@@ -75,8 +75,8 @@ package com.controller
 			//now place apple anywhere
 			Remote.getInstance().foodData.fCount++;
 			Remote.getInstance().foodData.fname = "fd"+Remote.getInstance().foodData.fCount;
-			Remote.getInstance().foodData.xx = String(apple.x);
-			Remote.getInstance().foodData.yy = String(apple.y);
+			Remote.getInstance().foodData.xx = apple.x;
+			Remote.getInstance().foodData.yy = apple.y;
 			//new food data updated..
 			Remote.getInstance().tellToAllAboutFood();
 		}

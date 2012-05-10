@@ -130,7 +130,7 @@ package com.Elements
 						snake_vector[snake_vector.length-2].direction);
 				}
 			}else{
-				trace("apple not yet placed..")
+				//trace("apple not yet placed..")
 			}
 			
 			if (snake_vector[0].x > stage.stageWidth-snake_vector[0].width || snake_vector[0].x < 0 || snake_vector[0].y > stage.stageHeight-snake_vector[0].height || snake_vector[0].y < 0){
