@@ -31,7 +31,7 @@ package com.modal
 	{
 		private static var thisObj:Remote;
 		public static const IJOINED_ADDMYSNAKE:String = "ijoinedaddsnake";
-		public static const GOTDATA_FROM_REMOTE:String = "gotdataRemoteChange";
+		public static const GOTSNAKE_DATA_FROM_REMOTE:String = "gotsnakedataRemoteChange";
 		public static const SNAKE_NAME_CHANGE:String = "snakenameChange";
 		public static const UPDATE_SNAKES_QUANTITY:String = "updatequantity";
 		public static const SUMBODY_BEFORE_YOU:String = "someBodybeforeyou";
@@ -67,7 +67,8 @@ package com.modal
 		protected function readyListener (e:ReactorEvent):void {
 			MANAGER = reactor.getRoomManager();
 			chatRoom = MANAGER.createRoom("bala");
-			chatRoom.addMessageListener("CHAT_MESSAGE",chatMessageListener);
+			chatRoom.addMessageListener(MsgController.ABOUT_SNAKEDATA,gotMessageForSnake);
+			chatRoom.addMessageListener(MsgController.CHAT_MESSAGE,gotMessageForChat);
 			chatRoom.addEventListener(RoomEvent.JOIN,joinRoomListener);
 			chatRoom.addEventListener(RoomEvent.ADD_OCCUPANT,addClientListener);
 			chatRoom.addEventListener(RoomEvent.REMOVE_OCCUPANT,removeClientListener);
@@ -77,15 +78,13 @@ package com.modal
 		}
 		
 		// Method invoked when a chat messageText(message+score) is received
-		protected function chatMessageListener (fromClient:IClient,messageText:String):void {
-			trace("ddd Remote got messageText=",messageText)
+		protected function gotMessageForSnake (fromClient:IClient,messageText:String):void {
+			trace("dd1 Remote got messageText1=",messageText)
 			var tempPlayer:PlayerDataVO = new PlayerDataVO();
+			tempPlayer.setStr(messageText);
 			tempPlayer.name = getUserName(fromClient);
-			var ary:Array = messageText.split(",");
-			tempPlayer.directon = ary[0].toString();
-			tempPlayer.score = ary[1].toString();
-			tempPlayer.rawData = messageText;
-			dispatchEvent(new CustomEvent(Remote.GOTDATA_FROM_REMOTE,tempPlayer));
+			trace("dd1 Remote got messageText2=",tempPlayer.getStr());
+			dispatchEvent(new CustomEvent(Remote.GOTSNAKE_DATA_FROM_REMOTE,tempPlayer));
 		}
 		
 		// Method invoked when a client joins the room
@@ -200,6 +199,11 @@ package com.modal
 				self.setAttribute("username", e.target.text);
 				e.target.text = "";
 			}
+		}
+		
+		protected function gotMessageForChat (fromClient:IClient,messageText:String):void {
+			Board.thisObj.incomingMessages.appendText(getUserName(fromClient) + " says: " + messageText+ "\n");
+			Board.thisObj.incomingMessages.scrollV = Board.thisObj.incomingMessages.maxScrollV;
 		}
 		
 		public function tellToAllAboutFood():void{

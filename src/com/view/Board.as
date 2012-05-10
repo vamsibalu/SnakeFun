@@ -4,8 +4,8 @@ package com.view
 	import com.Elements.MySnake;
 	import com.Elements.RemoteSnake;
 	import com.Elements.Snake;
-	import com.controller.MsgController;
 	import com.controller.MoveController;
+	import com.controller.MsgController;
 	import com.events.CustomEvent;
 	import com.modal.PlayerDataVO;
 	import com.modal.Remote;
@@ -15,6 +15,7 @@ package com.view
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.text.TextField;
+	import flash.ui.Keyboard;
 	
 	import net.user1.reactor.IClient;
 	
@@ -38,14 +39,15 @@ package com.view
 			Remote.getInstance().addEventListener(Remote.IJOINED_ADDMYSNAKE,iJoined_AddMySnake);
 			Remote.getInstance().addEventListener(Remote.SNAKE_NAME_CHANGE,updateSnakeName);
 			Remote.getInstance().addEventListener(Remote.UPDATE_SNAKES_QUANTITY,updateSnakeQuantity);
-			Remote.getInstance().addEventListener(Remote.GOTDATA_FROM_REMOTE,updateTheRemoteSnakeDirection);
 		}
+		
 		//SSS xx=200;yy=200;col=0xff00ff;
 		private function iJoined_AddMySnake(e:CustomEvent):void{
+			Remote.getInstance().addEventListener(Remote.GOTSNAKE_DATA_FROM_REMOTE,MoveController.getInstance().tellToController_Snake);
 			//add my snake;
 			mySnake = new MySnake();
 			mySnake.playerData = e.data;
-			mySnake.addEventListener(MySnake.I_GOT_FOOD,MoveController.getInstance().tellToController);
+			mySnake.addEventListener(MySnake.I_GOT_FOOD,MoveController.getInstance().tellToController_Food);
 			Remote.getInstance().chatRoom.addMessageListener(MsgController.ADDFOOD_AT,placeFood_ByRemote);
 			mySnake.addEventListener(CustomEvent.MY_KEY_DATA_TO_SEND,needToSendTo_Remote);
 			addChild(mySnake);
@@ -106,21 +108,6 @@ package com.view
 			}
 		}
 		
-		private function updateTheRemoteSnakeDirection(e:CustomEvent):void{
-			incomingMessages.appendText(e.data.name + " says: " + e.data.rawData + "\n");
-			incomingMessages.scrollV = incomingMessages.maxScrollV;
-			
-			for(var i:int = 0; i<allSnakes_vector.length; i++){
-				if((allSnakes_vector[i].playerData.name == e.data.name) && (allSnakes_vector[i] is RemoteSnake)){
-					trace("ddd modifying remoteSnake for",e.data.name);
-					RemoteSnake(allSnakes_vector[i]).directionChanged(e.data.directon);
-					break;
-				}
-				trace("ddd allSnakes_vector[i].playerData.name",allSnakes_vector[i].playerData.name," e.data.name=",e.data.name," allSnakes_vector.length=",allSnakes_vector.length)
-			}
-		}
-		
-		
 		// User interface objects
 		public var incomingMessages:TextField;
 		public var outgoingMessages:TextField;
@@ -131,10 +118,19 @@ package com.view
 			var tempSp:Sprite = new Sprite();
 			incomingMessages = UIObj.creatTxt(tempSp,300,200);
 			outgoingMessages = UIObj.creatTxt(tempSp,399,20,10,210);
+			// Keyboard listener for outgoingMessages
+			outgoingMessages.addEventListener(KeyboardEvent.KEY_UP, keyUpListener);
 			userlist = UIObj.creatTxt(tempSp,89,200,310);
 			nameInput = UIObj.creatTxt(tempSp,100,20,10,240);
 			nameInput.addEventListener(KeyboardEvent.KEY_UP,Remote.getInstance().nameKeyUpListener);
 			addChild(tempSp);
+		}
+		
+		protected function keyUpListener (e:KeyboardEvent):void {
+			if (e.keyCode == Keyboard.ENTER) {
+				Remote.getInstance().chatRoom.sendMessage(MsgController.CHAT_MESSAGE,true,null,outgoingMessages.text);
+				outgoingMessages.text = "";
+			}
 		}
 		
 	}

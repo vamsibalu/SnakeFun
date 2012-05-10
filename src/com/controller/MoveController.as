@@ -2,6 +2,8 @@ package com.controller
 {
 	import com.Elements.Element;
 	import com.Elements.MySnake;
+	import com.Elements.RemoteSnake;
+	import com.events.CustomEvent;
 	import com.modal.Remote;
 	import com.view.View;
 	
@@ -30,9 +32,20 @@ package com.controller
 			return thisObj;
 		}
 		
-		public function tellToController(e:Event):void{
-			trace("dd1 told to controller placeApple")
+		public function tellToController_Food(e:Event):void{
+			trace("dd1 told to controller placeApple");
 			placeApple(view.board.mySnake.snake_vector,true);
+		}
+		
+		public function tellToController_Snake(e:CustomEvent):void{
+			for(var i:int = 0; i<view.board.allSnakes_vector.length; i++){
+				if((view.board.allSnakes_vector[i].playerData.name == e.data.name) && (view.board.allSnakes_vector[i] is RemoteSnake)){
+					trace("ddd modifying remoteSnake for",e.data.name);
+					RemoteSnake(view.board.allSnakes_vector[i]).directionChanged(e.data.directon);
+					break;
+				}
+				trace("ddd allSnakes_vector[i].playerData.name",view.board.allSnakes_vector[i].playerData.name," e.data.name=",e.data.name," allSnakes_vector.length=",view.board.allSnakes_vector.length)
+			}
 		}
 		
 		private function placeApple(snake_vector:Vector.<Element>,caught:Boolean = true):void{
