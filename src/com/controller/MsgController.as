@@ -15,7 +15,7 @@ package com.controller
 	public class MsgController extends EventDispatcher{
 		private static var thisObj:MsgController;
 		public static const ADDFOOD_AT:String = "adfat";
-		public static const ABOUT_SNAKEDATA:String = "absnkt";
+		//public static const ABOUT_SNAKEDATA:String = "absnkt";
 		public static const ABOUT_DIRECTION:String = "abdrct";
 		public static const CHAT_MESSAGE:String = "chtmsg";
 		//public static const CHAT_MESSAGE:String = "chtmsg";
@@ -30,6 +30,7 @@ package com.controller
 				throw new Error("Error:Only One Instance Allow Bala..Use MoveController.getInstance() instead of new.");
 			}
 			remote.addEventListener(Remote.ROOMREADY,roomReady);
+			remote.addEventListener(Remote.UPDATEUSERLIST,updateUserlist);
 			thisObj = this;
 			board = _board;
 		}
@@ -87,6 +88,14 @@ package com.controller
 				board.incomingMessages.appendText(" 's name changed to "+ remote.getUserName(e.getClient())+ ".\n");
 				board.incomingMessages.scrollV = board.incomingMessages.maxScrollV;
 				//updateUserList();
+			}
+		}
+		
+		private function updateUserlist(e:CustomEvent):void{
+			board.userlist.text = "";
+			for each (var client:IClient in remote.chatRoom.getOccupants()) {
+				board.userlist.appendText(remote.getUserName(client) + "\n");
+				//trace("ddd client=",client)
 			}
 		}
 	}

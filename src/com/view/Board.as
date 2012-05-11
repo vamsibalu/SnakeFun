@@ -38,8 +38,6 @@ package com.view
 		private function init():void{
 			//add Remote Listeners..
 			Remote.getInstance().addEventListener(Remote.IJOINED_ADDMYSNAKE,iJoined_AddMySnake);
-			Remote.getInstance().addEventListener(Remote.SNAKE_NAME_CHANGE,updateSnakeName);
-			Remote.getInstance().addEventListener(Remote.UPDATE_SNAKES_QUANTITY,updateSnakeQuantity);
 		}
 		
 		//SSS xx=200;yy=200;col=0xff00ff;
@@ -56,14 +54,16 @@ package com.view
 				incomingMessages.appendText("You joined the chat.\n");
 				trace("dd1 iJoined_AddMySnake");
 			}else{
-				trace("dd1 somebody joined the room")
-				var roomEvent:RoomEvent = RoomEvent(e.data);
+				var roomEvent:RoomEvent = RoomEvent(e.data2);
 				incomingMessages.appendText(Remote.getInstance().getUserName(roomEvent.getClient())+ " joined the chat.\n");
-				Remote.getInstance().chatRoom.sendMessage(MsgController.ABOUT_SNAKEDATA,false,null,Board.thisObj.currentSnakeStatus().getStr())
+				var tempPlayer:PlayerDataVO = new PlayerDataVO();
+				tempPlayer.name = Remote.getInstance().getUserName(roomEvent.getClient());
+				addNewSnake(tempPlayer);
+				trace("dd1 somebody joined the room and send message");
 			}
 		}
 		
-		public function currentSnakeStatus():PlayerDataVO{
+		public function currentMySnakeStatus():PlayerDataVO{
 			mySnake.playerData.xx = mySnake.x;
 			mySnake.playerData.yy = mySnake.y;
 			trace("dd1 currentStatus xx=",mySnake.x,mySnake.x);
@@ -88,8 +88,8 @@ package com.view
 			trace("ddd addNewSnake in Board  for player=",playerData.name," allSnakes.length=",allSnakes_vector.length);
 		}
 		
-		private function updateSnakeQuantity(e:CustomEvent):void{
-			var ary:Array = e.data2 as Array;
+		/*private function updateSnakeQuantity(e:CustomEvent):void{
+			var ary:Array = Remote.getInstance().chatRoom.getOccupants();
 			trace("dd1 updateSnakeQuantity",ary)
 			for each (var client:IClient in ary) {
 				var namee:String = Remote.getInstance().getUserName(client);
@@ -109,7 +109,7 @@ package com.view
 					}
 				}
 			}
-		}
+		}*/
 		//msgController
 		public function updateSnakeName(oldN:String,newN:String):void{
 			for(var i:int = 0; i<allSnakes_vector.length; i++){

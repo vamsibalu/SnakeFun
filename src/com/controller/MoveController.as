@@ -33,47 +33,6 @@ package com.controller
 			Remote.getInstance().addEventListener(Remote.SUMBODY_BEFORE_YOU,checkForBoforeYou);
 		}
 		
-		/*private function sendAfterYou(e:CustomEvent):void{
-			Board.thisObj.incomingMessages.appendText(Remote.getInstance().getUserName(e.getClient())+ " joined the chat.\n");
-			//e.getClient().sendMessage(MsgController.ABOUT_SNAKEDATA,Board.thisObj.currentSnakeStatus().getStr());
-		}*/
-		
-		private function tellToControllerupdateUserlist():void{
-			Board.thisObj.userlist.text = "";
-			/*for each (var client:IClient in chatRoom.getOccupants()) {
-				tempList++;
-				Board.thisObj.userlist.appendText(getUserName(client) + "\n");
-				//trace("ddd client=",client)
-			}*/
-		}
-		
-		//chatRoom.addMessageListener(CustomEvent.CHAT_MESSAGE,gotMessageForChat);
-		/*protected function gotMessageForChat (fromClient:IClient,messageText:String):void {
-			Board.thisObj.incomingMessages.appendText(getUserName(fromClient) + " says: " + messageText+ "\n");
-			Board.thisObj.incomingMessages.scrollV = Board.thisObj.incomingMessages.maxScrollV;
-		}
-		
-		//chatRoom.addMessageListener(CustomEvent.CHAT_MESSAGE,gotMessageForChat);
-		public function tellToAllAboutFood():void{
-			chatRoom.sendMessage(MsgController.ADDFOOD_AT,true,null,foodData.getString());
-		}*/
-		
-		
-		//chatRoom.addMessageListener(CustomEvent.ABOUT_DIRECTION,gotMessageForDirections);
-		/*protected function gotMessageForDirections(fromClient:IClient,messageText:String):void {
-		mvController.tellToController_GotDirections(getUserName(fromClient),messageText);
-		}*/
-		
-		//chatRoom.addMessageListener(CustomEvent.ABOUT_SNAKEDATA,gotMessageForSnake);
-		/*protected function gotMessageForSnake(fromClient:IClient,messageText:String):void {
-			trace("dd1 Remote got messageText1=",messageText)
-			var tempPlayer:PlayerDataVO = new PlayerDataVO();
-			tempPlayer.setStr(messageText);
-			tempPlayer.name = getUserName(fromClient);
-			trace("dd1 Remote got messageText2=",tempPlayer.getStr());
-			MoveController.getInstance().tellToController_Snake(tempPlayer);
-		}*/
-		
 		private function checkForBoforeYou(e:CustomEvent):void{
 			trace("dd1 checkForBoforeYou=",e.data2);
 			if(e.data2 == true){
