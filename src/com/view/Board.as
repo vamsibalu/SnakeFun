@@ -63,13 +63,6 @@ package com.view
 			}
 		}
 		
-		private function currentMySnakeStatus():PlayerDataVO{
-			mySnake.playerData.xx = mySnake.x;
-			mySnake.playerData.yy = mySnake.y;
-			trace("dd1 currentStatus xx=",mySnake.x,mySnake.x);
-			return mySnake.playerData;
-		}
-		
 		protected function placeFood_ByRemote (fromClient:IClient,messageText:String):void {
 			//placeApple(mySnake.snake_vector);
 			trace("dd1 placeFood_ByRemote messageText",messageText)
@@ -88,8 +81,8 @@ package com.view
 			
 			for each (var client:IClient in Remote.getInstance().chatRoom.getOccupants()) {
 				if(client.isSelf()){
-					client.setAttribute(MsgController.ATR_SS,currentMySnakeStatus().getStr());
-					trace("dd1 setAttribute ss",currentMySnakeStatus().getStr())
+					client.setAttribute(MsgController.ATR_SS,mySnake.currentStatusOfMySnake());
+					trace("dd1 setAttribute of mysnake");
 				}
 			}
 			trace("ddd addNewSnake in Board  for player=",playerData.name," allSnakes.length=",allSnakes_vector.length);

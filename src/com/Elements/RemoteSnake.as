@@ -46,5 +46,9 @@ package com.Elements
 			}
 			markers_vector.push(m);
 		}
+		
+		public function setCurrentStatus(xmlStr:String):void{
+			
+		}
 	}
 }

@@ -1,6 +1,7 @@
 package com.Elements
 {
 	import com.events.CustomEvent;
+	
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.ui.Keyboard;
@@ -62,6 +63,16 @@ package com.Elements
 				dispatchEvent(new CustomEvent(CustomEvent.MY_KEY_DATA_TO_SEND,playerData));
 			}
 			markers_vector.push(m);
+		}
+		
+		public function currentStatusOfMySnake():String{
+			var xml:String = "<m>";
+			for(var i:int = 0; i<snake_vector.length; i++){
+				var nm:XML =  <n x={snake_vector[i].x} y={snake_vector[i].y} d={snake_vector[i].direction}/>
+				xml = xml + nm.toXMLString();
+			}
+			xml = xml+"</m>";
+			return xml;
 		}
 	}
 }

@@ -1,5 +1,7 @@
 package com.controller
 {
+	import com.Elements.MySnake;
+	import com.Elements.RemoteSnake;
 	import com.events.CustomEvent;
 	import com.model.PlayerDataVO;
 	import com.model.Remote;
@@ -90,7 +92,16 @@ package com.controller
 					updateUserlist();
 					break;
 				case MsgController.ATR_SS:
-					trace("dd1 atribute for snake=",e.getClient().getAttribute(MsgController.ATR_SS))
+					var xmlStr:String = e.getClient().getAttribute(MsgController.ATR_SS);
+					for(var i:int = 0; i<board.allSnakes_vector.length; i++){
+						if(board.allSnakes_vector[i] is RemoteSnake){
+							trace("dd1 got attributes",board.allSnakes_vector[i].playerData.name ,"==", remote.getUserName(e.getClient()));
+							if(board.allSnakes_vector[i].playerData.name == remote.getUserName(e.getClient())){
+								trace("dd1 atribute for snake=",remote.getUserName(e.getClient()),"xml=",xmlStr);
+								RemoteSnake(board.allSnakes_vector[i]).setCurrentStatus(xmlStr);
+							}
+						}
+					}
 					break;
 			}
 		}
