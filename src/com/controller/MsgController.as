@@ -15,10 +15,10 @@ package com.controller
 	public class MsgController extends EventDispatcher{
 		private static var thisObj:MsgController;
 		public static const ADDFOOD_AT:String = "adfat";
-		//public static const ABOUT_SNAKEDATA:String = "absnkt";
 		public static const ABOUT_DIRECTION:String = "abdrct";
 		public static const CHAT_MESSAGE:String = "chtmsg";
-		//public static const CHAT_MESSAGE:String = "chtmsg";
+		
+		public static const ATR_SS:String = "atrs";
 		
 		private var remote:Remote = Remote.getInstance();
 		private var board:Board;
@@ -39,7 +39,7 @@ package com.controller
 			remote.chatRoom.addMessageListener(CustomEvent.ABOUT_SNAKEDATA,gotMessageForSnake);
 			remote.chatRoom.addMessageListener(CustomEvent.CHAT_MESSAGE,gotMessageForChat);
 			remote.chatRoom.addMessageListener(CustomEvent.ABOUT_DIRECTION,gotMessageForDirections);
-			remote.chatRoom.addMessageListener(Remote.UPDATE_ATTRIBUTES,updateClientAttributeListener);
+			remote.chatRoom.addEventListener(RoomEvent.UPDATE_CLIENT_ATTRIBUTE,updateClientAttributeListener);
 		}
 		
 		public static function getInstance():MsgController{
@@ -68,30 +68,34 @@ package com.controller
 			remote.chatRoom.sendMessage(MsgController.ADDFOOD_AT,true,null,remote.foodData.getString());
 		}
 		
-		protected function updateClientAttributeListener (event:CustomEvent):void {
-			var e:RoomEvent = RoomEvent(event.data2);
-			
+		// Method invoked when any client in the room
+		// changes the value of a shared attribute
+		protected function updateClientAttributeListener (e:RoomEvent):void {
 			var changedAttr:Attribute = e.getChangedAttr();
 			var objj:Object = new Object();
-			//trace("dd1 atribute changed",changedAttr);
-			if (changedAttr.name == "username") {
-				if (changedAttr.oldValue == null) {
-					Board.thisObj.incomingMessages.appendText("Guest" + e.getClientID());
-					objj.oldN = "Guest" + e.getClientID();
-				} else {
-					Board.thisObj.incomingMessages.appendText(changedAttr.oldValue);
-					objj.oldN = changedAttr.oldValue;
-				}
-				objj.newN =  remote.getUserName(e.getClient());
-				trace("ddd Remote dispatching name changed=",objj.oldN," TO ",objj.newN);
-				board.updateSnakeName(objj.oldN,objj.newN);
-				board.incomingMessages.appendText(" 's name changed to "+ remote.getUserName(e.getClient())+ ".\n");
-				board.incomingMessages.scrollV = board.incomingMessages.maxScrollV;
-				//updateUserList();
+			switch (changedAttr.name){
+				case "username":
+					if (changedAttr.oldValue == null) {
+						Board.thisObj.incomingMessages.appendText("Guest" + e.getClientID());
+						objj.oldN = "Guest" + e.getClientID();
+					} else {
+						Board.thisObj.incomingMessages.appendText(changedAttr.oldValue);
+						objj.oldN = changedAttr.oldValue;
+					}
+					objj.newN =  remote.getUserName(e.getClient());
+					trace("ddd Remote dispatching name changed=",objj.oldN," TO ",objj.newN);
+					board.updateSnakeName(objj.oldN,objj.newN);
+					board.incomingMessages.appendText(" 's name changed to "+ remote.getUserName(e.getClient())+ ".\n");
+					board.incomingMessages.scrollV = board.incomingMessages.maxScrollV;
+					updateUserlist();
+					break;
+				case MsgController.ATR_SS:
+					trace("dd1 atribute for snake=",e.getClient().getAttribute(MsgController.ATR_SS))
+					break;
 			}
 		}
 		
-		private function updateUserlist(e:CustomEvent):void{
+		private function updateUserlist(e:CustomEvent = null):void{
 			board.userlist.text = "";
 			for each (var client:IClient in remote.chatRoom.getOccupants()) {
 				board.userlist.appendText(remote.getUserName(client) + "\n");

@@ -59,11 +59,11 @@ package com.view
 				var tempPlayer:PlayerDataVO = new PlayerDataVO();
 				tempPlayer.name = Remote.getInstance().getUserName(roomEvent.getClient());
 				addNewSnake(tempPlayer);
-				trace("dd1 somebody joined the room and send message");
+				trace("dd1 somebody joined the room added his snake and updated my attributes");
 			}
 		}
 		
-		public function currentMySnakeStatus():PlayerDataVO{
+		private function currentMySnakeStatus():PlayerDataVO{
 			mySnake.playerData.xx = mySnake.x;
 			mySnake.playerData.yy = mySnake.y;
 			trace("dd1 currentStatus xx=",mySnake.x,mySnake.x);
@@ -85,6 +85,13 @@ package com.view
 			tempRemoteSnake.playerData = playerData;
 			addChild(tempRemoteSnake);
 			allSnakes_vector.push(tempRemoteSnake);
+			
+			for each (var client:IClient in Remote.getInstance().chatRoom.getOccupants()) {
+				if(client.isSelf()){
+					client.setAttribute(MsgController.ATR_SS,currentMySnakeStatus().getStr());
+					trace("dd1 setAttribute ss",currentMySnakeStatus().getStr())
+				}
+			}
 			trace("ddd addNewSnake in Board  for player=",playerData.name," allSnakes.length=",allSnakes_vector.length);
 		}
 		
