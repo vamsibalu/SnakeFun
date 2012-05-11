@@ -7,8 +7,8 @@ package com.view
 	import com.controller.MoveController;
 	import com.controller.MsgController;
 	import com.events.CustomEvent;
-	import com.modal.PlayerDataVO;
-	import com.modal.Remote;
+	import com.model.PlayerDataVO;
+	import com.model.Remote;
 	import com.utils.UIObj;
 	
 	import flash.display.Sprite;
@@ -51,6 +51,7 @@ package com.view
 			mySnake.addEventListener(CustomEvent.MY_KEY_DATA_TO_SEND,MoveController.getInstance().tellToController_ToSendDirections);
 			addChild(mySnake);
 			allSnakes_vector.push(mySnake);
+			incomingMessages.appendText("You joined the chat.\n");
 			trace("dd1 iJoined_AddMySnake");
 		}
 		

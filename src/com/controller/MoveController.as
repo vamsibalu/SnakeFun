@@ -4,8 +4,8 @@ package com.controller
 	import com.Elements.MySnake;
 	import com.Elements.RemoteSnake;
 	import com.events.CustomEvent;
-	import com.modal.PlayerDataVO;
-	import com.modal.Remote;
+	import com.model.PlayerDataVO;
+	import com.model.Remote;
 	import com.view.Board;
 	import com.view.View;
 	
@@ -30,8 +30,73 @@ package com.controller
 			if (classCount>1) {
 				throw new Error("Error:Only Instance Allow Bala..Use MoveController.getInstance() instead of new.");
 			}
+			
 			Remote.getInstance().addEventListener(Remote.SUMBODY_BEFORE_YOU,checkForBoforeYou);
+			//Remote.getInstance().addEventListener(Remote.SUMBODY_AFTER_YOU,sendAfterYou);
 		}
+		
+		private function sendAfterYou(e:CustomEvent):void{
+			//Board.thisObj.incomingMessages.appendText(getUserName(e.getClient())+ " joined the chat.\n");
+			//e.getClient().sendMessage(MsgController.ABOUT_SNAKEDATA,Board.thisObj.currentSnakeStatus().getStr());
+		}
+		
+		private function tellToControllerupdateUserlist():void{
+			Board.thisObj.userlist.text = "";
+			/*for each (var client:IClient in chatRoom.getOccupants()) {
+				tempList++;
+				Board.thisObj.userlist.appendText(getUserName(client) + "\n");
+				//trace("ddd client=",client)
+			}*/
+		}
+		
+		
+		protected function updateClientAttributeListener (e:CustomEvent):void {
+			/*var changedAttr:Attribute = e.getChangedAttr();
+			var objj:Object = new Object();
+			//trace("dd1 atribute changed",changedAttr);
+			if (changedAttr.name == "username") {
+				if (changedAttr.oldValue == null) {
+					Board.thisObj.incomingMessages.appendText("Guest" + e.getClientID());
+					objj.oldN = "Guest" + e.getClientID();
+				} else {
+					Board.thisObj.incomingMessages.appendText(changedAttr.oldValue);
+					objj.oldN = changedAttr.oldValue;
+				}
+				objj.newN =  getUserName(e.getClient());
+				trace("ddd Remote dispatching name changed=",objj.oldN," TO ",objj.newN);
+				dispatchEvent(new CustomEvent(Remote.SNAKE_NAME_CHANGE,objj));
+				Board.thisObj.incomingMessages.appendText(" 's name changed to "+ getUserName(e.getClient())+ ".\n");
+				Board.thisObj.incomingMessages.scrollV = Board.thisObj.incomingMessages.maxScrollV;
+				updateUserList();
+			}*/
+		}
+		
+		//chatRoom.addMessageListener(CustomEvent.CHAT_MESSAGE,gotMessageForChat);
+		/*protected function gotMessageForChat (fromClient:IClient,messageText:String):void {
+			Board.thisObj.incomingMessages.appendText(getUserName(fromClient) + " says: " + messageText+ "\n");
+			Board.thisObj.incomingMessages.scrollV = Board.thisObj.incomingMessages.maxScrollV;
+		}
+		
+		//chatRoom.addMessageListener(CustomEvent.CHAT_MESSAGE,gotMessageForChat);
+		public function tellToAllAboutFood():void{
+			chatRoom.sendMessage(MsgController.ADDFOOD_AT,true,null,foodData.getString());
+		}*/
+		
+		
+		//chatRoom.addMessageListener(CustomEvent.ABOUT_DIRECTION,gotMessageForDirections);
+		/*protected function gotMessageForDirections(fromClient:IClient,messageText:String):void {
+		mvController.tellToController_GotDirections(getUserName(fromClient),messageText);
+		}*/
+		
+		//chatRoom.addMessageListener(CustomEvent.ABOUT_SNAKEDATA,gotMessageForSnake);
+		/*protected function gotMessageForSnake(fromClient:IClient,messageText:String):void {
+			trace("dd1 Remote got messageText1=",messageText)
+			var tempPlayer:PlayerDataVO = new PlayerDataVO();
+			tempPlayer.setStr(messageText);
+			tempPlayer.name = getUserName(fromClient);
+			trace("dd1 Remote got messageText2=",tempPlayer.getStr());
+			MoveController.getInstance().tellToController_Snake(tempPlayer);
+		}*/
 		
 		private function checkForBoforeYou(e:CustomEvent):void{
 			trace("dd1 checkForBoforeYou=",e.data2);
@@ -109,7 +174,7 @@ package com.controller
 			Remote.getInstance().foodData.xx = apple.x;
 			Remote.getInstance().foodData.yy = apple.y;
 			//new food data updated..
-			Remote.getInstance().tellToAllAboutFood();
+			//Remote.getInstance().tellToAllAboutFood();
 		}
 	}
 }

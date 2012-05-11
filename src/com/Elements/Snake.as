@@ -5,7 +5,7 @@
 package com.Elements  
 {
 	import com.controller.MoveController;
-	import com.modal.PlayerDataVO;
+	import com.model.PlayerDataVO;
 	import com.view.Board;
 	
 	import flash.display.Sprite;
