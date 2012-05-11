@@ -18,6 +18,7 @@ package com.view
 	import flash.ui.Keyboard;
 	
 	import net.user1.reactor.IClient;
+	import net.user1.reactor.RoomEvent;
 	
 	public class Board extends Sprite
 	{
@@ -44,15 +45,22 @@ package com.view
 		//SSS xx=200;yy=200;col=0xff00ff;
 		private function iJoined_AddMySnake(e:CustomEvent):void{
 			//add my snake;
-			mySnake = new MySnake();
-			mySnake.playerData = e.data;
-			mySnake.addEventListener(MySnake.I_GOT_FOOD,MoveController.getInstance().tellToController_Food);
-			Remote.getInstance().chatRoom.addMessageListener(MsgController.ADDFOOD_AT,placeFood_ByRemote);
-			mySnake.addEventListener(CustomEvent.MY_KEY_DATA_TO_SEND,MoveController.getInstance().tellToController_ToSendDirections);
-			addChild(mySnake);
-			allSnakes_vector.push(mySnake);
-			incomingMessages.appendText("You joined the chat.\n");
-			trace("dd1 iJoined_AddMySnake");
+			if(e.data is PlayerDataVO){
+				mySnake = new MySnake();
+				mySnake.playerData = e.data;
+				mySnake.addEventListener(MySnake.I_GOT_FOOD,MoveController.getInstance().tellToController_Food);
+				Remote.getInstance().chatRoom.addMessageListener(MsgController.ADDFOOD_AT,placeFood_ByRemote);
+				mySnake.addEventListener(CustomEvent.MY_KEY_DATA_TO_SEND,MoveController.getInstance().tellToController_ToSendDirections);
+				addChild(mySnake);
+				allSnakes_vector.push(mySnake);
+				incomingMessages.appendText("You joined the chat.\n");
+				trace("dd1 iJoined_AddMySnake");
+			}else{
+				trace("dd1 somebody joined the room")
+				var roomEvent:RoomEvent = RoomEvent(e.data);
+				incomingMessages.appendText(Remote.getInstance().getUserName(roomEvent.getClient())+ " joined the chat.\n");
+				Remote.getInstance().chatRoom.sendMessage(MsgController.ABOUT_SNAKEDATA,false,null,Board.thisObj.currentSnakeStatus().getStr())
+			}
 		}
 		
 		public function currentSnakeStatus():PlayerDataVO{
@@ -102,13 +110,13 @@ package com.view
 				}
 			}
 		}
-		
-		private function updateSnakeName(e:CustomEvent):void{
+		//msgController
+		public function updateSnakeName(oldN:String,newN:String):void{
 			for(var i:int = 0; i<allSnakes_vector.length; i++){
-				trace("ddd updateSnakeName allSnakes.length= ",allSnakes_vector.length," playerDataoldN=",allSnakes_vector[i].playerData.name,"oldN=",e.data2.oldN," newN",e.data2.newN)
-				if(allSnakes_vector[i].playerData.name == e.data2.oldN){
-					trace("ddd modifying name for",e.data2.oldN,e.data2.newN);
-					allSnakes_vector[i].playerData.name = e.data2.newN;
+				trace("ddd updateSnakeName allSnakes.length= ",allSnakes_vector.length," playerDataoldN=",allSnakes_vector[i].playerData.name,"oldN=",oldN," newN",newN)
+				if(allSnakes_vector[i].playerData.name == oldN){
+					trace("ddd modifying name for",oldN,newN);
+					allSnakes_vector[i].playerData.name = newN;
 					break;
 				}
 			}

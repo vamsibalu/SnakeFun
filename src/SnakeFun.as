@@ -5,6 +5,7 @@
 package
 {
 	import com.controller.MoveController;
+	import com.controller.MsgController;
 	import com.view.View;
 	
 	import flash.display.Sprite;
@@ -14,7 +15,8 @@ package
 		private var view:View;
 		public static var WIDTH:Number;
 		public static var HEIGHT:Number;
-		public var moveControll:MoveController;
+		public var moveController:MoveController;
+		public var msgController:MsgController;
 		
 		public function SnakeFun()
 		{
@@ -22,7 +24,8 @@ package
 			HEIGHT = stage.stageHeight;
 			view = new View(this);
 			addChild(view);
-			moveControll = new MoveController(view);
+			msgController = new MsgController(view.board);
+			moveController = new MoveController(view);
 		}
 	}
 }

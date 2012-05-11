@@ -1,4 +1,0 @@
-SnakeFun
-========
-
-snakefun code

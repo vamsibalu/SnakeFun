@@ -29,6 +29,7 @@
         </excludedEntries>
       </libraryPathEntry>
       <libraryPathEntry kind="3" linkType="1" path="D:/Bala/Balu_Src/Reactor_1.1.0.1169_Release/Reactor_1.1.0.1169_Release.swc" useDefaultLinkType="false"/>
+      <libraryPathEntry kind="3" linkType="1" path="D:/Bala/Example5/kukka/RemoteLib/bin/RemoteLib.swc" useDefaultLinkType="false"/>
     </libraryPath>
     <sourceAttachmentPath/>
   </compiler>
