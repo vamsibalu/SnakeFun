@@ -1,0 +1,13 @@
+bin-debug
+bin-release
+html-template
+.DS_Store
+assets/swf/assets.html
+resources
+
+/build-SWF/_Arial.swf
+/build-swf/com
+/build-SWF/history
+/build-SWF/CreamCheese.html
+/build-SWF/playerProductInstall.swf
+/build-SWF/swfobject.js
