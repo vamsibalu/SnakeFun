@@ -1,8 +1,10 @@
 bin-debug
 bin-release
 html-template
-.actionScriptProperties.DS_Store
-assets/swf/assets.htmlbin-debug/SnakeFun.swf
+.actionScriptProperties
+.DS_Store
+assets/swf/assets.html
+bin-debug/SnakeFun.swf
 resources
 
 /build-SWF/_Arial.swf
