@@ -73,8 +73,11 @@ package com.view
 		public function clientLeftRemoveSnake(cName:String):void{
 			for(var i:int = 0; i<allSnakes_vector.length; i++){
 				if(allSnakes_vector[i].playerData.name == cName){
-					var removedSnkae:Snake = allSnakes_vector.splice(i,1)[0];
-					trace("dd1 removed Snake for",removedSnkae.playerData.name)
+					var removedSnake:Snake = allSnakes_vector.splice(i,1)[0];
+					if(removedSnake.parent){
+						removeChild(removedSnake);
+						trace("dd1 removed Snake for",removedSnake.playerData.name);
+					}
 				}
 			}
 		}

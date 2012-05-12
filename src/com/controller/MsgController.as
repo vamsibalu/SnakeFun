@@ -94,24 +94,30 @@ package com.controller
 					break;
 				case MsgController.ATR_SS:
 					var _remoteSnake:RemoteSnake;
-					var xmlStr:String = e.getClient().getAttribute(MsgController.ATR_SS);
-					var namee:String = remote.getUserName(e.getClient());
-					if(board.allSnakes_vector.length > 0){
-						var alreadyExists:Boolean = false;
-						for(var i:int = 0; i<board.allSnakes_vector.length; i++){
-							if(board.allSnakes_vector[i].playerData.name == namee){
-								alreadyExists = true;
-								break;
+					if (e.getClient().isSelf() == false) {
+						var xmlStr:String = e.getClient().getAttribute(MsgController.ATR_SS);
+						var namee:String = remote.getUserName(e.getClient());
+						trace("dd1 got changes for ",namee);
+						if(board.allSnakes_vector.length > 0){
+							var alreadyExists:Boolean = false;
+							for(var i:int = 0; i<board.allSnakes_vector.length; i++){
+								if(board.allSnakes_vector[i].playerData.name == namee){
+									alreadyExists = true;
+									_remoteSnake = RemoteSnake(board.allSnakes_vector[i]);
+									break;
+								}
+							}
+							if(alreadyExists == false){
+								var temp:PlayerDataVO = new PlayerDataVO();
+								temp.name = namee;
+								_remoteSnake = board.addNewSnake(temp);
 							}
 						}
-						if(alreadyExists == false){
-							var temp:PlayerDataVO = new PlayerDataVO();
-							temp.name = namee;
-							_remoteSnake = board.addNewSnake(temp);
-						}
+						
+						_remoteSnake.setCurrentStatus(xmlStr);
+					}else{
+						trace("dd1 updates from myself..??");
 					}
-					
-					_remoteSnake.setCurrentStatus(xmlStr);
 					break;
 			}
 		}
@@ -129,7 +135,7 @@ package com.controller
 			trace("left som");
 			board.clientLeftRemoveSnake(remote.getUserName(e.getClient()));
 			board.incomingMessages.appendText(remote.getUserName(e.getClient())
-			+ " left the chat.\n");
+				+ " left the chat.\n");
 			board.incomingMessages.scrollV = Board.thisObj.incomingMessages.maxScrollV;
 		}
 		

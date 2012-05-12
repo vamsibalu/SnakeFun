@@ -133,7 +133,7 @@ package com.Elements
 				//trace("apple not yet placed..")
 			}
 			
-			if (snake_vector[0].x > stage.stageWidth-snake_vector[0].width || snake_vector[0].x < 0 || snake_vector[0].y > stage.stageHeight-snake_vector[0].height || snake_vector[0].y < 0){
+			if (snake_vector[0].x > SnakeFun.WIDTH-snake_vector[0].width || snake_vector[0].x < 0 || snake_vector[0].y > SnakeFun.HEIGHT-snake_vector[0].height || snake_vector[0].y < 0){
 				GAME_OVER();
 			}
 			
