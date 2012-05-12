@@ -48,7 +48,7 @@ package com.Elements
 		}
 		
 		public function setCurrentStatus(xmlStr:String):void{
-			
+			trace("dd1 doint setCurrentStatus",xmlStr,playerData.name)
 		}
 	}
 }

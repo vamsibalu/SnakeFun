@@ -52,14 +52,30 @@ package com.view
 				addChild(mySnake);
 				allSnakes_vector.push(mySnake);
 				incomingMessages.appendText("You joined the chat.\n");
-				trace("dd1 iJoined_AddMySnake");
+				trace("dd1 iJoined_AddMySnake my name",mySnake.playerData.name);
 			}else{
 				var roomEvent:RoomEvent = RoomEvent(e.data2);
 				incomingMessages.appendText(Remote.getInstance().getUserName(roomEvent.getClient())+ " joined the chat.\n");
 				var tempPlayer:PlayerDataVO = new PlayerDataVO();
 				tempPlayer.name = Remote.getInstance().getUserName(roomEvent.getClient());
 				addNewSnake(tempPlayer);
-				trace("dd1 somebody joined the room added his snake and updated my attributes");
+				trace("dd1 somebody joined his name=",tempPlayer.name);
+				//update my snake so he know about me...
+				for each (var client:IClient in Remote.getInstance().chatRoom.getOccupants()) {
+					if(client.isSelf()){
+						client.setAttribute(MsgController.ATR_SS,mySnake.currentStatusOfMySnake());
+						trace("dd1 did setAttributes of mysnake");
+					}
+				}
+			}
+		}
+		
+		public function clientLeftRemoveSnake(cName:String):void{
+			for(var i:int = 0; i<allSnakes_vector.length; i++){
+				if(allSnakes_vector[i].playerData.name == cName){
+					var removedSnkae:Snake = allSnakes_vector.splice(i,1)[0];
+					trace("dd1 removed Snake for",removedSnkae.playerData.name)
+				}
 			}
 		}
 		
@@ -72,43 +88,37 @@ package com.view
 			MoveController.apple.y = Remote.getInstance().foodData.yy;
 		}
 		
-		
-		private function addNewSnake(playerData:PlayerDataVO):void{
+		//msgController can use for before you snake..
+		public function addNewSnake(playerData:PlayerDataVO):RemoteSnake{
 			var tempRemoteSnake:RemoteSnake = new RemoteSnake();
 			tempRemoteSnake.playerData = playerData;
 			addChild(tempRemoteSnake);
 			allSnakes_vector.push(tempRemoteSnake);
-			
-			for each (var client:IClient in Remote.getInstance().chatRoom.getOccupants()) {
-				if(client.isSelf()){
-					client.setAttribute(MsgController.ATR_SS,mySnake.currentStatusOfMySnake());
-					trace("dd1 setAttribute of mysnake");
-				}
-			}
 			trace("ddd addNewSnake in Board  for player=",playerData.name," allSnakes.length=",allSnakes_vector.length);
+			return tempRemoteSnake;
 		}
 		
 		/*private function updateSnakeQuantity(e:CustomEvent):void{
-			var ary:Array = Remote.getInstance().chatRoom.getOccupants();
-			trace("dd1 updateSnakeQuantity",ary)
-			for each (var client:IClient in ary) {
-				var namee:String = Remote.getInstance().getUserName(client);
-				var tempPlayer:PlayerDataVO;
-				if(allSnakes_vector.length > 0){
-					var alreadyExists:Boolean = false;
-					for(var i:int = 0; i<allSnakes_vector.length; i++){
-						if(allSnakes_vector[i].playerData.name == namee){
-							alreadyExists = true;
-							break;
-						}
-					}
-					if(alreadyExists == false){
-						tempPlayer = new PlayerDataVO();
-						tempPlayer.name = namee;
-						addNewSnake(tempPlayer);
-					}
-				}
-			}
+		var ary:Array = Remote.getInstance().chatRoom.getOccupants();
+		trace("dd1 updateSnakeQuantity",ary)
+		for each (var client:IClient in ary) {
+		var namee:String = Remote.getInstance().getUserName(client);
+		var tempPlayer:PlayerDataVO;
+		if(allSnakes_vector.length > 0){
+		var alreadyExists:Boolean = false;
+		for(var i:int = 0; i<allSnakes_vector.length; i++){
+		if(allSnakes_vector[i].playerData.name == namee){
+		alreadyExists = true;
+		break;
+		}
+		}
+		if(alreadyExists == false){
+		tempPlayer = new PlayerDataVO();
+		tempPlayer.name = namee;
+		addNewSnake(tempPlayer);
+		}
+		}
+		}
 		}*/
 		//msgController
 		public function updateSnakeName(oldN:String,newN:String):void{

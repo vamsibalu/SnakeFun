@@ -42,6 +42,7 @@ package com.controller
 			remote.chatRoom.addMessageListener(CustomEvent.CHAT_MESSAGE,gotMessageForChat);
 			remote.chatRoom.addMessageListener(CustomEvent.ABOUT_DIRECTION,gotMessageForDirections);
 			remote.chatRoom.addEventListener(RoomEvent.UPDATE_CLIENT_ATTRIBUTE,updateClientAttributeListener);
+			remote.addEventListener(Remote.SUMBODY_LEFT,somebodyLeft);
 		}
 		
 		public static function getInstance():MsgController{
@@ -92,16 +93,25 @@ package com.controller
 					updateUserlist();
 					break;
 				case MsgController.ATR_SS:
+					var _remoteSnake:RemoteSnake;
 					var xmlStr:String = e.getClient().getAttribute(MsgController.ATR_SS);
-					for(var i:int = 0; i<board.allSnakes_vector.length; i++){
-						if(board.allSnakes_vector[i] is RemoteSnake){
-							trace("dd1 got attributes",board.allSnakes_vector[i].playerData.name ,"==", remote.getUserName(e.getClient()));
-							if(board.allSnakes_vector[i].playerData.name == remote.getUserName(e.getClient())){
-								trace("dd1 atribute for snake=",remote.getUserName(e.getClient()),"xml=",xmlStr);
-								RemoteSnake(board.allSnakes_vector[i]).setCurrentStatus(xmlStr);
+					var namee:String = remote.getUserName(e.getClient());
+					if(board.allSnakes_vector.length > 0){
+						var alreadyExists:Boolean = false;
+						for(var i:int = 0; i<board.allSnakes_vector.length; i++){
+							if(board.allSnakes_vector[i].playerData.name == namee){
+								alreadyExists = true;
+								break;
 							}
 						}
+						if(alreadyExists == false){
+							var temp:PlayerDataVO = new PlayerDataVO();
+							temp.name = namee;
+							_remoteSnake = board.addNewSnake(temp);
+						}
 					}
+					
+					_remoteSnake.setCurrentStatus(xmlStr);
 					break;
 			}
 		}
@@ -113,5 +123,16 @@ package com.controller
 				//trace("ddd client=",client)
 			}
 		}
+		
+		private function somebodyLeft(event:CustomEvent):void{
+			var e:RoomEvent = event.data2 as RoomEvent;
+			trace("left som");
+			board.clientLeftRemoveSnake(remote.getUserName(e.getClient()));
+			board.incomingMessages.appendText(remote.getUserName(e.getClient())
+			+ " left the chat.\n");
+			board.incomingMessages.scrollV = Board.thisObj.incomingMessages.maxScrollV;
+		}
+		
+		
 	}
 }
