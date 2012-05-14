@@ -1,6 +1,8 @@
 package com.Elements
 {
 	import com.events.CustomEvent;
+	import com.model.Remote;
+	import com.view.Board;
 	
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
@@ -69,6 +71,11 @@ package com.Elements
 			for(var i:int = 0; i<snake_vector.length; i++){
 				var nm:XML =  <n x={snake_vector[i].x} y={snake_vector[i].y} d={snake_vector[i].direction}/>
 				xml = xml + nm.toXMLString();
+			}
+			if(Board.IFirst == true){
+				var foodData:String = Remote.getInstance().foodData.getString();
+				var ff:XML =  <f data={foodData}/>
+				xml = xml + ff.toXMLString();
 			}
 			xml = xml+"</m>";
 			return xml;

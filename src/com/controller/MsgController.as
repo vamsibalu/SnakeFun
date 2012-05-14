@@ -67,6 +67,7 @@ package com.controller
 			board.incomingMessages.scrollV = Board.thisObj.incomingMessages.maxScrollV;
 		}
 		
+		//MoveController will call with updated foodData
 		public function tellToAllAboutFood():void{
 			remote.chatRoom.sendMessage(MsgController.ADDFOOD_AT,true,null,remote.foodData.getString());
 		}
@@ -115,6 +116,10 @@ package com.controller
 						}
 						
 						_remoteSnake.setCurrentStatus(xmlStr);
+						if(XML(xmlStr).f){
+							trace("dd1 gotfood data from first HERO",XML(xmlStr).f.@data)
+							board.placeFood_ByRemote(null,XML(xmlStr).f.@data);
+						}
 					}else{
 						trace("dd1 updates from myself..??");
 					}

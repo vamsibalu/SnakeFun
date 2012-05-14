@@ -49,7 +49,7 @@ package com.Elements
 			snake_vector = new Vector.<Element>;
 			markers_vector = new Vector.<Object>;
 			space_value = 2;
-			timer = new Timer(900); //Every 50th millisecond, the moveIt() function will be fired!
+			timer = new Timer(90); //Every 50th millisecond, the moveIt() function will be fired!
 			dead = false;
 			min_elements = 1;
 			//apple = new Element(0xFF0000, 1,10, 10); //red, not transparent, width:10, height: 10;

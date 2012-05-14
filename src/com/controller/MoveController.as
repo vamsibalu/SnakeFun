@@ -41,6 +41,7 @@ package com.controller
 				}
 			}else{
 				trace("dd1 iam first i can place food");
+				Board.IFirst = true;
 				placeApple(view.board.mySnake.snake_vector,false);
 			}
 		}

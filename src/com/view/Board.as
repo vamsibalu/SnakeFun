@@ -26,6 +26,7 @@ package com.view
 		
 		public var allSnakes_vector:Vector.<Snake> = new Vector.<Snake>();
 		public static var thisObj:Board;
+		public static var IFirst:Boolean = false;
 		
 		
 		public function Board(_base:SnakeFun)
@@ -82,8 +83,12 @@ package com.view
 			}
 		}
 		
-		protected function placeFood_ByRemote (fromClient:IClient,messageText:String):void {
+		//call from msgController for first time by First Hero
+		public function placeFood_ByRemote (fromClient:IClient=null,messageText:String=""):void {
 			//placeApple(mySnake.snake_vector);
+			if(MoveController.apple == null){
+				MoveController.apple = new Element(0xFF0000,1,10, 10);
+			}
 			trace("dd1 placeFood_ByRemote messageText",messageText)
 			Remote.getInstance().foodData.setString(messageText);
 			addChild(MoveController.apple);
