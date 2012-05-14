@@ -46,7 +46,7 @@ package com.view
 			if(e.data is PlayerDataVO){
 				mySnake = new MySnake();
 				mySnake.playerData = e.data;
-				mySnake.addEventListener(MySnake.I_GOT_FOOD,MoveController.getInstance().tellToController_Food);
+				mySnake.addEventListener(MySnake.I_GOT_FOOD,MoveController.getInstance().tellToController_MYSnakeGotFood);
 				Remote.getInstance().chatRoom.addMessageListener(MsgController.ADDFOOD_AT,placeFood_ByRemote);
 				mySnake.addEventListener(CustomEvent.MY_KEY_DATA_TO_SEND,MoveController.getInstance().tellToController_ToSendDirections);
 				addChild(mySnake);

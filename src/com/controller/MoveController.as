@@ -39,6 +39,9 @@ package com.controller
 				for each (var client2:IClient in Remote.getInstance().chatRoom.getOccupants()) {
 					trace("xx ddd",client2.getAttribute("xx"));
 				}
+			}else{
+				trace("dd1 iam first i can place food");
+				placeApple(view.board.mySnake.snake_vector,false);
 			}
 		}
 		
@@ -46,7 +49,7 @@ package com.controller
 			return thisObj;
 		}
 		
-		public function tellToController_Food(e:Event):void{
+		public function tellToController_MYSnakeGotFood(e:Event):void{
 			trace("dd1 told to controller placeApple");
 			placeApple(view.board.mySnake.snake_vector,true);
 		}
@@ -80,6 +83,7 @@ package com.controller
 		}
 		
 		private function placeApple(snake_vector:Vector.<Element>,caught:Boolean = true):void{
+			trace("dd1 placeApple")
 			if(apple == null){
 				apple = new Element(0xFF0000,1,10, 10);
 			}

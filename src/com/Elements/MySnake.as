@@ -20,7 +20,6 @@ package com.Elements
 		}
 		
 		private function directionChanged(e:KeyboardEvent):void {
-			trace("dd1 mysnake xx",this.x,super.x);
 			var m:Object = new Object(); //MARKER OBJECT
 			var directionChanged:Boolean = false;
 			if (e.keyCode == Keyboard.LEFT && last_button_down != e.keyCode && last_button_down != Keyboard.RIGHT && flag)

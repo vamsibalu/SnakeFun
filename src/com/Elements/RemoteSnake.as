@@ -48,8 +48,19 @@ package com.Elements
 		}
 		
 		public function setCurrentStatus(xmlStr:String):void{
-			trace("dd1 doint setCurrentStatus",xmlStr,playerData.name);
-			
+			var xml:XML = XML(xmlStr);
+			trace("dd1 applying setCurrentStatus",playerData.name,xml.n.length());
+			for(var i:int = 0; i<xml.n.length(); i++){
+				if(snake_vector[i]){
+					
+				}else{
+					snake_vector[i] = new Element(0x00AAFF,1,10,10);
+				}
+				trace("dd1 snake_vector[i] data==",xml.n[i].@x,xml.n[i].@y,xml.n[i].@d)
+				snake_vector[i].direction = xml.n[i].@d;
+				snake_vector[i].x = xml.n[i].@x;
+				snake_vector[i].y = xml.n[i].@y;
+			}
 		}
 	}
 }

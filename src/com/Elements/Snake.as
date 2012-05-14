@@ -83,7 +83,8 @@ package com.Elements
 			timer.start();
 		}
 		
-		private function attachElement(who:Element,lastXPos:Number = 0,lastYPos:Number = 0,dirOfLast:String = "R"):void
+		//for remoteSnake to use xml data
+		public function attachElement(who:Element,lastXPos:Number = 0,lastYPos:Number = 0,dirOfLast:String = "R"):void
 		{
 			if (dirOfLast == "R")
 			{
