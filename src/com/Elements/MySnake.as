@@ -64,20 +64,28 @@ package com.Elements
 				dispatchEvent(new CustomEvent(CustomEvent.MY_KEY_DATA_TO_SEND,playerData));
 			}
 			markers_vector.push(m);
+			trace("dd2 markers_vector",markers_vector.length)
 		}
 		
 		public function currentStatusOfMySnake():String{
-			var xml:String = "<m>";
+			var xml:String = "<o>";
 			for(var i:int = 0; i<snake_vector.length; i++){
 				var nm:XML =  <n x={snake_vector[i].x} y={snake_vector[i].y} d={snake_vector[i].direction}/>
 				xml = xml + nm.toXMLString();
 			}
+			
+			//send markers details aswell..
+			for(var j:int = 0; j<markers_vector.length; j++){
+				var m:XML =  <m x={markers_vector[j].x} y={markers_vector[j].y} type={markers_vector[j].type}/>
+				xml = xml + m.toXMLString();
+			}
+			
 			if(Board.IFirst == true){
 				var foodData:String = Remote.getInstance().foodData.getString();
 				var ff:XML =  <f data={foodData}/>
 				xml = xml + ff.toXMLString();
 			}
-			xml = xml+"</m>";
+			xml = xml+"</o>";
 			return xml;
 		}
 	}

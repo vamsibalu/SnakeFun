@@ -52,7 +52,7 @@ package com.Elements
 			trace("dd1 applying setCurrentStatus",playerData.name,xml.n.length());
 			for(var i:int = 0; i<xml.n.length(); i++){
 				if(snake_vector.length>i){
-					
+					trace("already element is there");
 				}else{
 					snake_vector[i] = new Element(0x00AAFF,1,10,10);
 				}
@@ -62,6 +62,17 @@ package com.Elements
 				snake_vector[i].y = xml.n[i].@y;
 				super.addChild(snake_vector[i]);
 			}
+			
+			//for markers
+			var tempMarks:Vector.<Object> = new Vector.<Object>;
+			for(var j:int = 0; j<xml.m.length(); j++){
+				var m:Object = new Object(); //MARKER OBJECT
+				m.x = xml.m[j].@x;
+				m.y = xml.m[j].@y;
+				m.type = xml.m[j].@type;
+				tempMarks.push(m);
+			}
+			markers_vector = tempMarks;
 		}
 	}
 }
