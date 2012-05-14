@@ -51,7 +51,7 @@ package com.Elements
 			var xml:XML = XML(xmlStr);
 			trace("dd1 applying setCurrentStatus",playerData.name,xml.n.length());
 			for(var i:int = 0; i<xml.n.length(); i++){
-				if(snake_vector[i]){
+				if(snake_vector.length>i){
 					
 				}else{
 					snake_vector[i] = new Element(0x00AAFF,1,10,10);
@@ -60,6 +60,7 @@ package com.Elements
 				snake_vector[i].direction = xml.n[i].@d;
 				snake_vector[i].x = xml.n[i].@x;
 				snake_vector[i].y = xml.n[i].@y;
+				super.addChild(snake_vector[i]);
 			}
 		}
 	}

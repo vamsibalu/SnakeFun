@@ -42,6 +42,7 @@ package com.controller
 			}else{
 				trace("dd1 iam first i can place food");
 				Board.IFirst = true;
+				//MsgController.getInstance().startRemoteTiming();
 				placeApple(view.board.mySnake.snake_vector,false);
 			}
 		}
@@ -76,11 +77,20 @@ package com.controller
 			}
 		}
 		
+		//send message for Directon and 
 		public function tellToController_ToSendDirections(e:CustomEvent):void{
+			//update my snake so he know about me...
+			for each (var client:IClient in Remote.getInstance().chatRoom.getOccupants()) {
+				if(client.isSelf()){
+					client.setAttribute(MsgController.ATR_SS,Board.thisObj.mySnake.currentStatusOfMySnake());
+					trace("dd1 did setAttributes of mysnake");
+				}
+			}
+			
 			var tempMsg:String = e.data.directon;
 			Remote.getInstance().chatRoom.sendMessage(MsgController.ABOUT_DIRECTION,true,null,tempMsg);
 			Board.TXT.b.text = tempMsg;
-			trace("ddd sending chat message=",tempMsg)
+			trace("dd1 sending Direction message=",tempMsg)
 		}
 		
 		private function placeApple(snake_vector:Vector.<Element>,caught:Boolean = true):void{

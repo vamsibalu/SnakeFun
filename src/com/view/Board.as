@@ -29,8 +29,7 @@ package com.view
 		public static var IFirst:Boolean = false;
 		
 		
-		public function Board(_base:SnakeFun)
-		{
+		public function Board(_base:SnakeFun){
 			thisObj = this;
 			makeDummyUI()
 			init();

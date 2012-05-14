@@ -49,7 +49,7 @@ package com.Elements
 			snake_vector = new Vector.<Element>;
 			markers_vector = new Vector.<Object>;
 			space_value = 2;
-			timer = new Timer(90); //Every 50th millisecond, the moveIt() function will be fired!
+			timer = new Timer(900); //Every 50th millisecond, the moveIt() function will be fired!
 			dead = false;
 			min_elements = 1;
 			//apple = new Element(0xFF0000, 1,10, 10); //red, not transparent, width:10, height: 10;
@@ -111,17 +111,15 @@ package com.Elements
 		
 		//Moving Snake..
 		private function moveIt(e:TimerEvent):void{
-			if(MoveController.apple){
+			if(MoveController.apple && remoteSnake == false){
 				if (snake_vector[0].x == MoveController.apple.x && snake_vector[0].y == MoveController.apple.y){
 					//placeApple();
-					if(remoteSnake == false){
-						trace("dd1 dispatching..I_GOT_FOOD");
-						dispatchEvent(new Event(MySnake.I_GOT_FOOD));
-						//show the current Score
-						score += MoveController.apple.catchValue;
-						score_tf.text = "Score:" + String(score);
-						playerData.score = String(score);
-					}
+					trace("dd1 dispatching..I_GOT_FOOD");
+					dispatchEvent(new Event(MySnake.I_GOT_FOOD));
+					//show the current Score
+					score += MoveController.apple.catchValue;
+					score_tf.text = "Score:" + String(score);
+					playerData.score = String(score);
 					//Attach a new snake Element
 					snake_vector.push(new Element(0x00AAFF,1,10,10));
 					snake_vector[snake_vector.length-1].direction = snake_vector[snake_vector.length-2].direction; //lastOneRichtung
@@ -130,12 +128,11 @@ package com.Elements
 						snake_vector[snake_vector.length-2].y,
 						snake_vector[snake_vector.length-2].direction);
 				}
-			}else{
-				//trace("apple not yet placed..")
 			}
-			
-			if (snake_vector[0].x > SnakeFun.WIDTH-snake_vector[0].width || snake_vector[0].x < 0 || snake_vector[0].y > SnakeFun.HEIGHT-snake_vector[0].height || snake_vector[0].y < 0){
-				GAME_OVER();
+			if(remoteSnake == false){
+				if (snake_vector[0].x > SnakeFun.WIDTH-snake_vector[0].width || snake_vector[0].x < 0 || snake_vector[0].y > SnakeFun.HEIGHT-snake_vector[0].height || snake_vector[0].y < 0){
+					GAME_OVER();
+				}
 			}
 			
 			for (var i:int = 0; i < snake_vector.length; i++)
@@ -154,9 +151,11 @@ package com.Elements
 						}
 					}
 				}
-				if (snake_vector[i] != snake_vector[0] && (snake_vector[0].x == snake_vector[i].x && snake_vector[0].y == snake_vector[i].y))
-				{
-					GAME_OVER();
+				if(remoteSnake == false){
+					if (snake_vector[i] != snake_vector[0] && (snake_vector[0].x == snake_vector[i].x && snake_vector[0].y == snake_vector[i].y))
+					{
+						GAME_OVER();
+					}
 				}
 				
 				//Move the boy

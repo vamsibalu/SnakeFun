@@ -9,6 +9,8 @@ package com.controller
 	
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
+	import flash.events.TimerEvent;
+	import flash.utils.Timer;
 	
 	import net.user1.reactor.Attribute;
 	import net.user1.reactor.IClient;
@@ -25,6 +27,7 @@ package com.controller
 		private var remote:Remote = Remote.getInstance();
 		private var board:Board;
 		public static var classCount:int = 0;
+		private var msgTime:Timer = new Timer(120);
 		
 		public function MsgController(_board:Board){
 			classCount++;
@@ -35,12 +38,27 @@ package com.controller
 			remote.addEventListener(Remote.UPDATEUSERLIST,updateUserlist);
 			thisObj = this;
 			board = _board;
+			//msgTime.addEventListener(TimerEvent.TIMER,sendMsgTime);
+		}
+		
+		public function startRemoteTiming():void{
+			msgTime.start();
+		}
+		
+		private function sendMsgTime(e:TimerEvent):void{
+			Remote.getInstance().chatRoom.sendMessage("t",true,null,"t");
+		}
+		
+		protected function gotTime(fromClient:IClient,messageText:String):void {
+			trace("dd1 timing..")
+			//board.mySnake.moveIt();
 		}
 		
 		private function roomReady(e:Event):void{
 			remote.chatRoom.addMessageListener(CustomEvent.ABOUT_SNAKEDATA,gotMessageForSnake);
 			remote.chatRoom.addMessageListener(CustomEvent.CHAT_MESSAGE,gotMessageForChat);
 			remote.chatRoom.addMessageListener(CustomEvent.ABOUT_DIRECTION,gotMessageForDirections);
+			remote.chatRoom.addMessageListener("t",gotTime);
 			remote.chatRoom.addEventListener(RoomEvent.UPDATE_CLIENT_ATTRIBUTE,updateClientAttributeListener);
 			remote.addEventListener(Remote.SUMBODY_LEFT,somebodyLeft);
 		}
