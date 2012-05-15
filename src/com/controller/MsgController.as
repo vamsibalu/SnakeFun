@@ -92,6 +92,7 @@ package com.controller
 		
 		// Method invoked when any client in the room
 		// changes the value of a shared attribute
+		private var takenFoodDataFirstTime:Boolean = false;
 		protected function updateClientAttributeListener (e:RoomEvent):void {
 			var changedAttr:Attribute = e.getChangedAttr();
 			var objj:Object = new Object();
@@ -134,7 +135,8 @@ package com.controller
 						}
 						
 						_remoteSnake.setCurrentStatus(xmlStr);
-						if(XML(xmlStr).f){
+						if(XML(xmlStr).f && takenFoodDataFirstTime == false){
+							takenFoodDataFirstTime = true;
 							trace("dd1 gotfood data from first HERO",XML(xmlStr).f.@data)
 							board.placeFood_ByRemote(null,XML(xmlStr).f.@data);
 						}

@@ -63,7 +63,7 @@ package com.view
 				//update my snake so he know about me...
 				for each (var client:IClient in Remote.getInstance().chatRoom.getOccupants()) {
 					if(client.isSelf()){
-						client.setAttribute(MsgController.ATR_SS,mySnake.currentStatusOfMySnake());
+						client.setAttribute(MsgController.ATR_SS,mySnake.currentStatusOfMySnake(true));
 						trace("dd1 did setAttributes of mysnake");
 					}
 				}

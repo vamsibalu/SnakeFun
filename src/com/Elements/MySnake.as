@@ -69,7 +69,7 @@ package com.Elements
 			trace("dd2 markers_vector",markers_vector.length);
 		}
 		
-		public function currentStatusOfMySnake():String{
+		public function currentStatusOfMySnake(needFoodData:Boolean):String{
 			var xml:String = "<o>";
 			for(var i:int = 0; i<snake_vector.length; i++){
 				var nm:XML =  <n x={snake_vector[i].x} y={snake_vector[i].y} d={snake_vector[i].direction}/>
@@ -83,7 +83,7 @@ package com.Elements
 				trace("dd2 settingmarkersMYsnake=",m.@type);
 			}
 			
-			if(Board.IFirst == true){
+			if(Board.IFirst == true && needFoodData == true){
 				var foodData:String = Remote.getInstance().foodData.getString();
 				var ff:XML =  <f data={foodData}/>
 				xml = xml + ff.toXMLString();

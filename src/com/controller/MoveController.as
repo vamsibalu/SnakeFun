@@ -53,6 +53,8 @@ package com.controller
 		
 		public function tellToController_MYSnakeGotFood(e:Event):void{
 			trace("dd1 told to controller placeApple");
+			//update my snake so everybody know about me...
+			updateMySnake_isSlef();
 			placeApple(view.board.mySnake.snake_vector,true);
 		}
 		
@@ -79,18 +81,22 @@ package com.controller
 		
 		//send message for Directon and 
 		public function tellToController_ToSendDirections(e:CustomEvent):void{
-			//update my snake so he know about me...
-			for each (var client:IClient in Remote.getInstance().chatRoom.getOccupants()) {
-				if(client.isSelf()){
-					client.setAttribute(MsgController.ATR_SS,Board.thisObj.mySnake.currentStatusOfMySnake());
-					trace("dd1 did setAttributes of mysnake");
-				}
-			}
+			//update my snake so everybody know about me...
+			updateMySnake_isSlef();
 			
 			var tempMsg:String = e.data.directon;
 			Remote.getInstance().chatRoom.sendMessage(MsgController.ABOUT_DIRECTION,true,null,tempMsg);
 			Board.TXT.b.text = tempMsg;
 			trace("dd1 sending Direction message=",tempMsg)
+		}
+		
+		private function updateMySnake_isSlef():void{
+			for each (var client:IClient in Remote.getInstance().chatRoom.getOccupants()) {
+				if(client.isSelf()){
+					client.setAttribute(MsgController.ATR_SS,Board.thisObj.mySnake.currentStatusOfMySnake(false));
+					trace("dd1 did setAttributes of mysnake");
+				}
+			}
 		}
 		
 		private function placeApple(snake_vector:Vector.<Element>,caught:Boolean = true):void{
