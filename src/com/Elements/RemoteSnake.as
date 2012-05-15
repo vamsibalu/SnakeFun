@@ -70,7 +70,9 @@ package com.Elements
 				m.x = xml.m[j].@x;
 				m.y = xml.m[j].@y;
 				m.type = xml.m[j].@type;
+				flag = false;
 				tempMarks.push(m);
+				trace("dd2 gotmarkersRemotesnake=",m.type)
 			}
 			markers_vector = tempMarks;
 		}

@@ -60,11 +60,13 @@ package com.Elements
 				last_button_down = Keyboard.DOWN;
 				flag = false;
 			}
+			
+			markers_vector.push(m);
+			
 			if(directionChanged == true){
 				dispatchEvent(new CustomEvent(CustomEvent.MY_KEY_DATA_TO_SEND,playerData));
 			}
-			markers_vector.push(m);
-			trace("dd2 markers_vector",markers_vector.length)
+			trace("dd2 markers_vector",markers_vector.length);
 		}
 		
 		public function currentStatusOfMySnake():String{
@@ -73,11 +75,12 @@ package com.Elements
 				var nm:XML =  <n x={snake_vector[i].x} y={snake_vector[i].y} d={snake_vector[i].direction}/>
 				xml = xml + nm.toXMLString();
 			}
-			
+			trace("dd2 currentStatusOfMySnake_______________________")
 			//send markers details aswell..
 			for(var j:int = 0; j<markers_vector.length; j++){
 				var m:XML =  <m x={markers_vector[j].x} y={markers_vector[j].y} type={markers_vector[j].type}/>
 				xml = xml + m.toXMLString();
+				trace("dd2 settingmarkersMYsnake=",m.@type);
 			}
 			
 			if(Board.IFirst == true){
