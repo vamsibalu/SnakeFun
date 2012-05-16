@@ -21,6 +21,7 @@ package com.controller
 		public static const ADDFOOD_AT:String = "adfat";
 		public static const ABOUT_DIRECTION:String = "abdrct";
 		public static const CHAT_MESSAGE:String = "chtmsg";
+		public static var ROOM_NAME:String = "temp";
 		
 		public static const ATR_SS:String = "atrs";
 		
@@ -34,7 +35,8 @@ package com.controller
 			if (classCount>1) {
 				throw new Error("Error:Only One Instance Allow Bala..Use MoveController.getInstance() instead of new.");
 			}
-			remote.addEventListener(Remote.ROOMREADY,roomReady);
+			trace("dd2 creating remote");
+			remote.addEventListener(Remote.SERVERREADY,serverReady);
 			remote.addEventListener(Remote.UPDATEUSERLIST,updateUserlist);
 			thisObj = this;
 			board = _board;
@@ -54,7 +56,8 @@ package com.controller
 			//board.mySnake.moveIt();
 		}
 		
-		private function roomReady(e:Event):void{
+		private function serverReady(e:Event):void{
+			remote.joinRoom(ROOM_NAME);
 			remote.chatRoom.addMessageListener(CustomEvent.ABOUT_SNAKEDATA,gotMessageForSnake);
 			remote.chatRoom.addMessageListener(CustomEvent.CHAT_MESSAGE,gotMessageForChat);
 			remote.chatRoom.addMessageListener(CustomEvent.ABOUT_DIRECTION,gotMessageForDirections);
