@@ -84,6 +84,7 @@ package com.Elements
 			}
 			
 			if(Board.IFirst == true && needFoodData == true){
+				trace("dd2 adding <f data");
 				var foodData:String = Remote.getInstance().foodData.getString();
 				var ff:XML =  <f data={foodData}/>
 				xml = xml + ff.toXMLString();

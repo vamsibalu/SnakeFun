@@ -22,6 +22,7 @@ package
 		{
 			WIDTH = stage.stageWidth;
 			HEIGHT = stage.stageHeight;
+			trace("version** 1.0 ** 16/05/2012");
 			view = new View(this);
 			addChild(view);
 			msgController = new MsgController(view.board);

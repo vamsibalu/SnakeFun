@@ -72,7 +72,7 @@ package com.Elements
 				m.type = xml.m[j].@type;
 				flag = false;
 				tempMarks.push(m);
-				trace("dd2 gotmarkersRemotesnake=",m.type)
+				trace("dd2 gotmarkersRemotesnake=",m.type);
 			}
 			markers_vector = tempMarks;
 		}

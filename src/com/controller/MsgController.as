@@ -135,13 +135,13 @@ package com.controller
 						}
 						
 						_remoteSnake.setCurrentStatus(xmlStr);
-						if(XML(xmlStr).f && takenFoodDataFirstTime == false){
+						if(XML(xmlStr).f!=undefined && XML(xmlStr).f!=null){
 							takenFoodDataFirstTime = true;
-							trace("dd1 gotfood data from first HERO",XML(xmlStr).f.@data)
+							trace("dd2 gotfood data from first HERO",XML(xmlStr).f.@data)
 							board.placeFood_ByRemote(null,XML(xmlStr).f.@data);
 						}
 					}else{
-						trace("dd1 updates from myself..??");
+						trace("dd2 updates from myself..??");
 					}
 					break;
 			}

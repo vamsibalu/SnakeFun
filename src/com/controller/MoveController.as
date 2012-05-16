@@ -94,7 +94,7 @@ package com.controller
 			for each (var client:IClient in Remote.getInstance().chatRoom.getOccupants()) {
 				if(client.isSelf()){
 					client.setAttribute(MsgController.ATR_SS,Board.thisObj.mySnake.currentStatusOfMySnake(false));
-					trace("dd1 did setAttributes of mysnake");
+					trace("dd2 did setAttributes of mysnake");
 				}
 			}
 		}
